@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - NSGAIIRunner",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "org.uma.jmetal.runner.multiobjective.NSGAIIRunner",
+            "args": "",
+            "projectName": "jmetal-exec"
+        }
+    ]
+}
