@@ -1,7 +1,8 @@
 package org.uma.jmetal.runner.multiobjective;
 //NSGAIII
 import org.uma.jmetal.algorithm.Algorithm;
-import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAIIBuilder;
+import org.uma.jmetal.algorithm.multiobjective.ansga.aNSGABuilder;
+import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
@@ -16,15 +17,10 @@ import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-//NSGAIII
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
-import org.uma.jmetal.solution.DoubleSolution;
-import org.uma.jmetal.util.*;
-
 /**
- * Class to configure and run the aNSGA algorithm
+ * Class to configure and run the aNSGARunner algorithm
  */
-public class aNSGA extends AbstractAlgorithmRunner  {
+public class aNSGARunner extends AbstractAlgorithmRunner  {
     /**
      * @param args Command line arguments.
      * @throws JMetalException
@@ -33,6 +29,7 @@ public class aNSGA extends AbstractAlgorithmRunner  {
     java org.uma.jmetal.runner.multiobjective.NSGAIIRunner problemName [referenceFront]
      */
     public static void main(String[] args) throws JMetalException, FileNotFoundException {
+//        declares the type of the problem to solve
         Problem<DoubleSolution> problem;
         Algorithm<List<DoubleSolution>> algorithm;
         CrossoverOperator<DoubleSolution> crossover;
@@ -40,6 +37,7 @@ public class aNSGA extends AbstractAlgorithmRunner  {
         SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
         String referenceParetoFront = "" ;
 
+//        load a problem
         String problemName ;
         if (args.length == 1) {
         problemName = args[0];
@@ -53,6 +51,7 @@ public class aNSGA extends AbstractAlgorithmRunner  {
 
         problem = ProblemUtils.<DoubleSolution> loadProblem(problemName);
 
+//        operators and algorithm are configured
         double crossoverProbability = 0.9 ;
         double crossoverDistributionIndex = 20.0 ;
         crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex) ;
@@ -64,12 +63,24 @@ public class aNSGA extends AbstractAlgorithmRunner  {
         selection = new BinaryTournamentSelection<DoubleSolution>(
         new RankingAndCrowdingDistanceComparator<DoubleSolution>());
 
-        algorithm = new NSGAIIBuilder<DoubleSolution>(problem, crossover, mutation)
-        .setSelectionOperator(selection)
-        .setMaxEvaluations(25000)
-        .setPopulationSize(100)
-        .build() ;
+//        from NSGAIIRunner
+//        algorithm = new aNSGABuilder<DoubleSolution>(problem, crossover, mutation)
+//        .setSelectionOperator(selection)
+//        .setMaxEvaluations(25000)
+//        .setPopulationSize(100)
+//        .build() ;
 
+//        from  NSGAIIIRunner
+        algorithm = new aNSGABuilder<>(problem, crossover, mutation)
+//                .setCrossoverOperator(crossover)
+//                .setMutationOperator(mutation)
+                .setSelectionOperator(selection)
+//                .setMaxIterations(300)
+                .build() ;
+
+
+
+//        print
         AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
         .execute() ;
 

@@ -1,8 +1,5 @@
 package org.uma.jmetal.algorithm.multiobjective.ansga;
 
-import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
-import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAIIMeasures;
-import org.uma.jmetal.algorithm.multiobjective.nsgaii.SteadyStateNSGAII;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
@@ -22,14 +19,14 @@ import java.util.List;
 /**
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
-public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<NSGAII<S>> {
+public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<aNSGA<S>> {
   public enum NSGAIIVariant {NSGAII, SteadyStateNSGAII, Measures, NSGAII45}
 
   /**
    * NSGAIIBuilder class
    */
   private final Problem<S> problem;
-  private int maxEvaluations;
+  private int maxEvaluations; // maxIterations in NSGAIII
   private int populationSize;
   private CrossoverOperator<S>  crossoverOperator;
   private MutationOperator<S> mutationOperator;
@@ -40,7 +37,7 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<NSG
   private NSGAIIVariant variant;
 
   /**
-   * NSGAIIBuilder constructor
+   * aNSGABuilder constructor
    */
   public aNSGABuilder(Problem<S> problem, CrossoverOperator<S> crossoverOperator,
                       MutationOperator<S> mutationOperator) {
@@ -51,10 +48,11 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<NSG
     this.mutationOperator = mutationOperator ;
     selectionOperator = new BinaryTournamentSelection<S>(new RankingAndCrowdingDistanceComparator<S>()) ;
     evaluator = new SequentialSolutionListEvaluator<S>();
-    dominanceComparator = new DominanceComparator<>()  ;
+    dominanceComparator = new DominanceComparator<>();
 
     this.variant = NSGAIIVariant.NSGAII ;
   }
+
 
   public aNSGABuilder<S> setMaxEvaluations(int maxEvaluations) {
     if (maxEvaluations < 0) {
@@ -109,22 +107,6 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<NSG
     return this;
   }
 
-  public NSGAII<S> build() {
-    NSGAII<S> algorithm = null ;
-    if (variant.equals(NSGAIIVariant.NSGAII)) {
-      algorithm = new NSGAII<S>(problem, maxEvaluations, populationSize, crossoverOperator,
-          mutationOperator, selectionOperator, dominanceComparator, evaluator);
-    } else if (variant.equals(NSGAIIVariant.SteadyStateNSGAII)) {
-      algorithm = new SteadyStateNSGAII<S>(problem, maxEvaluations, populationSize, crossoverOperator,
-          mutationOperator, selectionOperator, dominanceComparator, evaluator);
-    } else if (variant.equals(NSGAIIVariant.Measures)) {
-      algorithm = new NSGAIIMeasures<S>(problem, maxEvaluations, populationSize, crossoverOperator,
-          mutationOperator, selectionOperator, dominanceComparator, evaluator);
-    }
-
-    return algorithm ;
-  }
-
   /* Getters */
   public Problem<S> getProblem() {
     return problem;
@@ -150,7 +132,11 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<NSG
     return selectionOperator;
   }
 
-  public SolutionListEvaluator<S> getSolutionListEvaluator() {
+  public SolutionListEvaluator<S> getEvaluator() {
     return evaluator;
+  }
+
+  public aNSGA<S> build() {
+    return new aNSGA<>(this);
   }
 }
