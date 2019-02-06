@@ -19,7 +19,7 @@ import org.uma.jmetal.operator.impl.crossover.HUXCrossover;
 import org.uma.jmetal.operator.impl.crossover.SinglePointCrossover;
 import org.uma.jmetal.operator.impl.mutation.BitFlipMutation;
 import org.uma.jmetal.operator.impl.selection.RandomSelection;
-import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
+import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
 import org.uma.jmetal.problem.BinaryProblem;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.problem.multiobjective.OneZeroMax;
@@ -156,7 +156,7 @@ public class BinaryProblemsStudy {
 
         crossoverOperator = new HUXCrossover(1.0);
         parentsSelection = new RandomSelection<BinarySolution>();
-        newGenerationSelection = new RankingAndCrowdingSelection<BinarySolution>(100);
+        newGenerationSelection = new RankingAndAdaptiveSelection<BinarySolution>(100);
         mutationOperator = new BitFlipMutation(0.35);
         Algorithm<List<BinarySolution>> algorithm = new MOCHCBuilder(
             (BinaryProblem) problemList.get(i).getProblem())

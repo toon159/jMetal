@@ -6,7 +6,7 @@ import org.uma.jmetal.algorithm.multiobjective.nsgaiii.util.ReferencePoint;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
-import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
+import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
@@ -148,15 +148,18 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     return copy;
   }
 
-  @Override protected List<S> replacement(List<S> population, List<S> offspringPopulation) {
+  @Override
+  protected List<S> replacement(List<S> population, List<S> offspringPopulation) {
     List<S> jointPopulation = new ArrayList<>();
     jointPopulation.addAll(population);
     jointPopulation.addAll(offspringPopulation);
 
-    RankingAndCrowdingSelection<S> rankingAndCrowdingSelection ;
-    rankingAndCrowdingSelection = new RankingAndCrowdingSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
 
-    return rankingAndCrowdingSelection.execute(jointPopulation) ;
+
+    RankingAndAdaptiveSelection<S> rankingAndAdaptiveSelection ;
+    rankingAndAdaptiveSelection = new RankingAndAdaptiveSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
+
+    return rankingAndAdaptiveSelection.execute(jointPopulation) ;
   }
 
   /*

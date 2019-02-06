@@ -4,7 +4,7 @@ import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
-import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
+import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.SolutionListUtils;
@@ -77,10 +77,10 @@ public class NSGAII<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, L
     jointPopulation.addAll(population);
     jointPopulation.addAll(offspringPopulation);
 
-    RankingAndCrowdingSelection<S> rankingAndCrowdingSelection ;
-    rankingAndCrowdingSelection = new RankingAndCrowdingSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
+    RankingAndAdaptiveSelection<S> rankingAndAdaptiveSelection;
+    rankingAndAdaptiveSelection = new RankingAndAdaptiveSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
 
-    return rankingAndCrowdingSelection.execute(jointPopulation) ;
+    return rankingAndAdaptiveSelection.execute(jointPopulation) ;
   }
 
   @Override public List<S> getResult() {
