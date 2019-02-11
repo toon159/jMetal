@@ -2,6 +2,7 @@ package org.uma.jmetal.algorithm.multiobjective.ansga;
 
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
+import org.uma.jmetal.algorithm.multiobjective.nsgaiii.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.nsgaiii.util.ReferencePoint;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
@@ -154,12 +155,34 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     jointPopulation.addAll(population);
     jointPopulation.addAll(offspringPopulation);
 
-
-
+//    2
     RankingAndAdaptiveSelection<S> rankingAndAdaptiveSelection ;
     rankingAndAdaptiveSelection = new RankingAndAdaptiveSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
+    List<S> pop2 = rankingAndAdaptiveSelection.execute(jointPopulation) ;
 
-    return rankingAndAdaptiveSelection.execute(jointPopulation) ;
+//    3
+    Ranking<S> ranking = computeRanking(jointPopulation);
+    //List<Solution> pop = crowdingDistanceSelection(ranking);
+    List<S> pop = new ArrayList<>();
+    List<List<S>> fronts = new ArrayList<>();
+    int rankingIndex = 0;
+    int candidateSolutions = 0;
+    while (candidateSolutions < getMaxPopulationSize()) {
+      fronts.add(ranking.getSubfront(rankingIndex));
+      candidateSolutions += ranking.getSubfront(rankingIndex).size();
+      if ((pop.size() + ranking.getSubfront(rankingIndex).size()) <= getMaxPopulationSize())
+        addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
+      rankingIndex++;
+    }
+
+    // A copy of the reference list should be used as parameter of the environmental selection
+    EnvironmentalSelection<S> selection =
+            new EnvironmentalSelection<>(fronts,getMaxPopulationSize(),getReferencePointsCopy(),
+                    getProblem().getNumberOfObjectives());
+
+    pop = selection.execute(pop);
+
+    return pop2 ;
   }
 
   /*
