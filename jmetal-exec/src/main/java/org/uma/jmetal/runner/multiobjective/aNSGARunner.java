@@ -37,19 +37,22 @@ public class aNSGARunner extends AbstractAlgorithmRunner  {
         SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
         String referenceParetoFront = "" ;
 
-//        load a problem
-        String problemName ;
-        if (args.length == 1) {
-        problemName = args[0];
-        } else if (args.length == 2) {
-        problemName = args[0] ;
-        referenceParetoFront = args[1] ;
-        } else {
-        problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
-        referenceParetoFront = "jmetal-problem/src/test/resources/pareto_fronts/ZDT1.pf" ;
-        }
+////        load a problem
+//        String problemName ;
+//        if (args.length == 1) {
+//        problemName = args[0];
+//        } else if (args.length == 2) {
+//        problemName = args[0] ;
+//        referenceParetoFront = args[1] ;
+//        } else {
+//        problemName = "org.uma.jmetal.problem.multiobjective.dtlz.ZDT1";
+////            problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
+////        referenceParetoFront = "jmetal-problem/src/test/resources/pareto_fronts/ZDT1.pf" ;
+//        }
 
-        problem = ProblemUtils.<DoubleSolution> loadProblem(problemName);
+        String problemName = "org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1" ;
+
+        problem = ProblemUtils.loadProblem(problemName);
 
 //        operators and algorithm are configured
         double crossoverProbability = 0.9 ;

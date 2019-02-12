@@ -8,6 +8,7 @@ import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
 import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
+import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
@@ -16,6 +17,7 @@ import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 import org.uma.jmetal.util.solutionattribute.Ranking;
 import org.uma.jmetal.util.solutionattribute.impl.DominanceRanking;
+import org.uma.jmetal.util.solutionattribute.impl.Fitness;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -156,33 +158,50 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     jointPopulation.addAll(offspringPopulation);
 
 //    2
-    RankingAndAdaptiveSelection<S> rankingAndAdaptiveSelection ;
-    rankingAndAdaptiveSelection = new RankingAndAdaptiveSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
-    List<S> pop2 = rankingAndAdaptiveSelection.execute(jointPopulation) ;
+//    RankingAndAdaptiveSelection<S> rankingAndAdaptiveSelection ;
+//    rankingAndAdaptiveSelection = new RankingAndAdaptiveSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
+//    List<S> pop2 = rankingAndAdaptiveSelection.execute(jointPopulation) ;
 
-//    3
+//    Add as most ranks as possible
     Ranking<S> ranking = computeRanking(jointPopulation);
     //List<Solution> pop = crowdingDistanceSelection(ranking);
     List<S> pop = new ArrayList<>();
     List<List<S>> fronts = new ArrayList<>();
     int rankingIndex = 0;
     int candidateSolutions = 0;
+//    while the number of solutions is less than pop
     while (candidateSolutions < getMaxPopulationSize()) {
+//      add fronts
       fronts.add(ranking.getSubfront(rankingIndex));
       candidateSolutions += ranking.getSubfront(rankingIndex).size();
+//      if current rank + solutions <= max pop then add that rank
       if ((pop.size() + ranking.getSubfront(rankingIndex).size()) <= getMaxPopulationSize())
         addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
+//      increment ranking index
       rankingIndex++;
     }
 
-    // A copy of the reference list should be used as parameter of the environmental selection
-    EnvironmentalSelection<S> selection =
-            new EnvironmentalSelection<>(fronts,getMaxPopulationSize(),getReferencePointsCopy(),
-                    getProblem().getNumberOfObjectives());
+    float ratio = 0;
+//    find the most pop fitness for each obj
+    List<S> lastFront = ranking.getSubfront(rankingIndex);
+    Fitness<S> f1 = new Fitness<>();
+    Fitness<S> f2 = new Fitness<>();
+//    ratio = f1/f2
+    if (ratio < 0.66){
+//      2
+      RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
+      rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator) ;
+      pop = rankingAndCrowdingSelection.execute(jointPopulation);
+    } else {
+//      3
+      // A copy of the reference list should be used as parameter of the environmental selection
+      EnvironmentalSelection<S> selection =
+              new EnvironmentalSelection<>(fronts,getMaxPopulationSize(),getReferencePointsCopy(),
+                      getProblem().getNumberOfObjectives());
+      pop = selection.execute(pop);
+    }
 
-    pop = selection.execute(pop);
-
-    return pop2 ;
+    return pop ;
   }
 
   /*
