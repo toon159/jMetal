@@ -50,8 +50,8 @@ public class aNSGARunner extends AbstractAlgorithmRunner  {
 ////        referenceParetoFront = "jmetal-problem/src/test/resources/pareto_fronts/ZDT1.pf" ;
 //        }
 
-        String problemName = "org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1" ;
-
+        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1" ;
+        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
         problem = ProblemUtils.loadProblem(problemName);
 
 //        operators and algorithm are configured

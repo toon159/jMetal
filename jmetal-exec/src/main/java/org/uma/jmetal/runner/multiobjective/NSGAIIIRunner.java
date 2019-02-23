@@ -14,6 +14,7 @@ import org.uma.jmetal.util.*;
 import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -30,19 +31,21 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
    *        - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName
    *        - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName paretoFrontFile
    */
-  public static void main(String[] args) throws JMetalException {
+  public static void main(String[] args) throws JMetalException, FileNotFoundException {
 	    Problem<DoubleSolution> problem;
 	    Algorithm<List<DoubleSolution>> algorithm;
 	    CrossoverOperator<DoubleSolution> crossover;
 	    MutationOperator<DoubleSolution> mutation;
 	    SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
+	    String referenceParetoFront = "";
 
-    String problemName = "org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1" ;
+    String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1" ;
+    referenceParetoFront = "/pareto_fronts/ZDT1.pf";
 
     problem = ProblemUtils.loadProblem(problemName);
 
     double crossoverProbability = 0.9 ;
-    double crossoverDistributionIndex = 30.0 ;
+    double crossoverDistributionIndex = 20.0 ;
     crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex) ;
 
     double mutationProbability = 1.0 / problem.getNumberOfVariables() ;
@@ -73,5 +76,9 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
     JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
     JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
     JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
+    printFinalSolutionSet(population);
+    if (!referenceParetoFront.equals("")) {
+        printQualityIndicators(population, referenceParetoFront) ;
+    }
   }
 }

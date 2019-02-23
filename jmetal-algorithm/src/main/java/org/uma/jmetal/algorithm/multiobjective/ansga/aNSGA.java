@@ -77,19 +77,21 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     selectionOperator =  builder.getSelectionOperator() ;
 
     evaluator = builder.getEvaluator() ;
+    dominanceComparator = new DominanceComparator<>() ;
+
 
     /// NSGAIII
     numberOfDivisions = new Vector<>(1) ;
-    numberOfDivisions.add(12) ; // Default value for 3D problems
+    numberOfDivisions.add(5) ; // 12 Default value for 3D problems
 
     (new ReferencePoint<S>()).generateReferencePoints(referencePoints,getProblem().getNumberOfObjectives() , numberOfDivisions);
 
-    int populationSize = referencePoints.size();
-    while (populationSize%4>0) {
-      populationSize++;
-    }
+//    int populationSize = referencePoints.size();
+//    while (populationSize%4>0) {
+//      populationSize++;
+//    }
 
-    setMaxPopulationSize(populationSize);
+    setMaxPopulationSize(100);
 
     JMetalLogger.logger.info("rpssize: " + referencePoints.size()); ;
   }
@@ -181,19 +183,26 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
       rankingIndex++;
     }
 
-    float ratio = 0;
+//    float ratio = 0;
 //    find the most pop fitness for each obj
+    double avg;
     List<S> lastFront = ranking.getSubfront(rankingIndex);
-    Fitness<S> f1 = new Fitness<>();
-    Fitness<S> f2 = new Fitness<>();
+    RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
+    rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator) ;
+    avg = rankingAndCrowdingSelection.avgCrowdingDistance(ranking, rankingIndex, lastFront);
+    System.out.println(avg);
+//    double x1 = lastFront<S>.;
+//    Fitness<S> f2 = new Fitness<>();
 //    ratio = f1/f2
-    if (ratio < 0.66){
+    if (avg < 925){
 //      2
-      RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
+//      System.out.println(2);
+//      RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
       rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator) ;
       pop = rankingAndCrowdingSelection.execute(jointPopulation);
     } else {
 //      3
+//      System.out.println(3);
       // A copy of the reference list should be used as parameter of the environmental selection
       EnvironmentalSelection<S> selection =
               new EnvironmentalSelection<>(fronts,getMaxPopulationSize(),getReferencePointsCopy(),

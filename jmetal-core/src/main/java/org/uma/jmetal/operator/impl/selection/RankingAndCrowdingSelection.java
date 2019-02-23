@@ -79,6 +79,7 @@ public class RankingAndCrowdingSelection<S extends Solution<?>>
     return population ;
   }
 
+
   protected boolean subfrontFillsIntoThePopulation(Ranking<S> ranking, int rank, List<S> population) {
     return ranking.getSubfront(rank).size() < (solutionsToSelect - population.size()) ;
   }
@@ -103,5 +104,22 @@ public class RankingAndCrowdingSelection<S extends Solution<?>>
       population.add(currentRankedFront.get(i)) ;
       i++ ;
     }
+  }
+
+  public double avgCrowdingDistance(Ranking<S> ranking, int rank, List<S> solutionList) throws JMetalException {
+    ranking = new DominanceRanking<S>(dominanceComparator);
+    ranking.computeRanking(solutionList) ;
+    double avg = 0;
+    double current = 0;
+//    ArrayList<S> currentRankedFront = (ArrayList<S>) ranking.getSubfront(rank) ;
+    CrowdingDistance<S> crowdingDistance = new CrowdingDistance<S>() ;
+    for (int i = 0; i < solutionList.size(); i++) {
+      if (crowdingDistance.getAttribute(solutionList.get(i)) != null && crowdingDistance.getAttribute(solutionList.get(i)) != Double.POSITIVE_INFINITY){
+        current = crowdingDistance.getAttribute(solutionList.get(i));
+        avg += current;
+      }
+    }
+    avg /= solutionList.size();
+    return avg;
   }
 }
