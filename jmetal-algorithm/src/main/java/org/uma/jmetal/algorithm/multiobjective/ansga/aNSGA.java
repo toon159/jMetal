@@ -2,8 +2,9 @@ package org.uma.jmetal.algorithm.multiobjective.ansga;
 
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.util.EnvironmentalSelection;
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.util.ReferencePoint;
+import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
+import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
+import org.uma.jmetal.algorithm.multiobjective.ansga.util.Point;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;

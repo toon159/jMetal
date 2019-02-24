@@ -122,4 +122,12 @@ public class RankingAndCrowdingSelection<S extends Solution<?>>
     avg /= solutionList.size();
     return avg;
   }
+
+  public double ratioDistance(Ranking<S> ranking, int rank, List<S> solutionList) {
+    double ratio = 1;
+    ranking = new DominanceRanking<S>(dominanceComparator);
+    ranking.computeRanking(solutionList) ;
+    CrowdingDistance<S> crowdingDistance = new CrowdingDistance<S>() ;
+    return ratio;
+  }
 }
