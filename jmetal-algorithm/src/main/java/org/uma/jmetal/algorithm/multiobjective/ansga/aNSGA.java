@@ -12,8 +12,10 @@ import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.AdaptiveGrid;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
+import org.uma.jmetal.util.archive.impl.AdaptiveGridArchive;
 import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 import org.uma.jmetal.util.solutionattribute.Ranking;
@@ -40,6 +42,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
   protected Vector<Integer> numberOfDivisions  ;
   protected List<ReferencePoint<S>> referencePoints = new Vector<>() ;
 
+  protected AdaptiveGridArchive<S> archive;
 
 //  /**
 //   * Constructor
@@ -84,6 +87,9 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     /// NSGAIII
     numberOfDivisions = new Vector<>(1) ;
     numberOfDivisions.add(5) ; // 12 Default value for 3D problems
+
+    archive = new AdaptiveGridArchive<S>(100, 5, problem.getNumberOfObjectives());
+
 
     (new ReferencePoint<S>()).generateReferencePoints(referencePoints,getProblem().getNumberOfObjectives() , numberOfDivisions);
 
@@ -160,11 +166,6 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     jointPopulation.addAll(population);
     jointPopulation.addAll(offspringPopulation);
 
-//    2
-//    RankingAndAdaptiveSelection<S> rankingAndAdaptiveSelection ;
-//    rankingAndAdaptiveSelection = new RankingAndAdaptiveSelection<S>(getMaxPopulationSize(), dominanceComparator) ;
-//    List<S> pop2 = rankingAndAdaptiveSelection.execute(jointPopulation) ;
-
 //    Add as most ranks as possible
     Ranking<S> ranking = computeRanking(jointPopulation);
     //List<Solution> pop = crowdingDistanceSelection(ranking);
@@ -182,6 +183,10 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
 //      increment ranking index
       rankingIndex++;
+    }
+    for (S s:jointPopulation
+         ) {
+      archive.add(s);
     }
 
 //    float ratio = 0;
