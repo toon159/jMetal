@@ -2,6 +2,7 @@ package org.uma.jmetal.algorithm.multiobjective.ansga;
 
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
+import org.uma.jmetal.algorithm.multiobjective.ansga.util.Point;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
 import org.uma.jmetal.solution.Solution;
@@ -144,21 +145,21 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
       rankingIndex++;
     }
 
-    myAdaptiveGrid.updateGrid(pop);
-    System.out.println(myAdaptiveGrid.toString());
-
-//    float ratio = 0;
-//    find the most pop fitness for each obj
-    double avg;
+    double short_line, long_line, ratio;
     List<S> lastFront = ranking.getSubfront(rankingIndex);
+    List<double[]> position = new ArrayList<>();
+    position.add(lastFront.get(0).getObjectives());
+    position.add(lastFront.get(lastFront.size() - 1).getObjectives());
+    Point p1 = new Point(position.get(0)[0], position.get(0)[1]);
+    Point p2 = new Point(position.get(1)[0], position.get(1)[1]);
+    short_line = p1.distance(p2);
+    long_line = p1.distance0ytox0(p2);
+//    System.out.println(short_line/long_line);
+    ratio = short_line/long_line;
+    System.out.println("short " + short_line + " long " + long_line);
     RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
-    rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator) ;
-    avg = rankingAndCrowdingSelection.avgCrowdingDistance(ranking, rankingIndex, lastFront);
-//    System.out.println(avg);
-//    double x1 = lastFront<S>.;
-//    Fitness<S> f2 = new Fitness<>();
-//    ratio = f1/f2
-    if (avg < 925){
+
+    if (2 < 925){
 //      2
 //      System.out.println(2);
 //      RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
