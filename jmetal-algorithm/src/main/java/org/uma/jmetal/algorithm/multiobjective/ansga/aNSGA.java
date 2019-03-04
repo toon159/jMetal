@@ -12,7 +12,7 @@ import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.AdaptiveGrid;
+import org.uma.jmetal.util.MyAdaptiveGrid;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.archive.impl.AdaptiveGridArchive;
@@ -42,7 +42,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
   protected Vector<Integer> numberOfDivisions  ;
   protected List<ReferencePoint<S>> referencePoints = new Vector<>() ;
 
-  protected AdaptiveGridArchive<S> archive;
+  protected MyAdaptiveGrid<S> myAdaptiveGrid;
 
 //  /**
 //   * Constructor
@@ -88,7 +88,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     numberOfDivisions = new Vector<>(1) ;
     numberOfDivisions.add(5) ; // 12 Default value for 3D problems
 
-    archive = new AdaptiveGridArchive<S>(100, 5, problem.getNumberOfObjectives());
+    myAdaptiveGrid = new MyAdaptiveGrid<>(1, problem.getNumberOfObjectives());
 
 
     (new ReferencePoint<S>()).generateReferencePoints(referencePoints,getProblem().getNumberOfObjectives() , numberOfDivisions);
@@ -184,10 +184,9 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //      increment ranking index
       rankingIndex++;
     }
-    for (S s:jointPopulation
-         ) {
-      archive.add(s);
-    }
+
+    myAdaptiveGrid.updateGrid(pop);
+    System.out.println(myAdaptiveGrid.toString());
 
 //    float ratio = 0;
 //    find the most pop fitness for each obj
@@ -196,7 +195,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
     rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator) ;
     avg = rankingAndCrowdingSelection.avgCrowdingDistance(ranking, rankingIndex, lastFront);
-    System.out.println(avg);
+//    System.out.println(avg);
 //    double x1 = lastFront<S>.;
 //    Fitness<S> f2 = new Fitness<>();
 //    ratio = f1/f2
@@ -218,41 +217,6 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
     return pop ;
   }
-
-  /*
-  *
-  * @Override
-  protected List<S> replacement(List<S> population, List<S> offspringPopulation) {
-
-	List<S> jointPopulation = new ArrayList<>();
-    jointPopulation.addAll(population) ;
-    jointPopulation.addAll(offspringPopulation) ;
-
-    Ranking<S> ranking = computeRanking(jointPopulation);
-
-    //List<Solution> pop = crowdingDistanceSelection(ranking);
-    List<S> pop = new ArrayList<>();
-    List<List<S>> fronts = new ArrayList<>();
-    int rankingIndex = 0;
-    int candidateSolutions = 0;
-    while (candidateSolutions < getMaxPopulationSize()) {
-      fronts.add(ranking.getSubfront(rankingIndex));
-      candidateSolutions += ranking.getSubfront(rankingIndex).size();
-      if ((pop.size() + ranking.getSubfront(rankingIndex).size()) <= getMaxPopulationSize())
-        addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
-      rankingIndex++;
-    }
-
-    // A copy of the reference list should be used as parameter of the environmental selection
-    EnvironmentalSelection<S> selection =
-            new EnvironmentalSelection<>(fronts,getMaxPopulationSize(),getReferencePointsCopy(),
-                    getProblem().getNumberOfObjectives());
-
-    pop = selection.execute(pop);
-
-    return pop;
-  }
-  */
 
   @Override public List<S> getResult() {
     return getNonDominatedSolutions(getPopulation());
