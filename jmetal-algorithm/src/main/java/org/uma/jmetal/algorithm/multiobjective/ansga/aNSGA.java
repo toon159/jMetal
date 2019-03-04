@@ -1,26 +1,17 @@
 package org.uma.jmetal.algorithm.multiobjective.ansga;
 
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
-import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
-import org.uma.jmetal.algorithm.multiobjective.ansga.util.Point;
-import org.uma.jmetal.operator.CrossoverOperator;
-import org.uma.jmetal.operator.MutationOperator;
-import org.uma.jmetal.operator.SelectionOperator;
-import org.uma.jmetal.operator.impl.selection.RankingAndAdaptiveSelection;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
-import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.MyAdaptiveGrid;
 import org.uma.jmetal.util.JMetalLogger;
+import org.uma.jmetal.util.MyAdaptiveGrid;
 import org.uma.jmetal.util.SolutionListUtils;
-import org.uma.jmetal.util.archive.impl.AdaptiveGridArchive;
 import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 import org.uma.jmetal.util.solutionattribute.Ranking;
 import org.uma.jmetal.util.solutionattribute.impl.DominanceRanking;
-import org.uma.jmetal.util.solutionattribute.impl.Fitness;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -44,33 +35,6 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
   protected MyAdaptiveGrid<S> myAdaptiveGrid;
 
-//  /**
-//   * Constructor
-//   */
-//  public aNSGA(Problem<S> problem, int maxEvaluations, int populationSize,
-//               CrossoverOperator<S> crossoverOperator, MutationOperator<S> mutationOperator,
-//               SelectionOperator<List<S>, S> selectionOperator, SolutionListEvaluator<S> evaluator) {
-//    this(problem, maxEvaluations, populationSize, crossoverOperator, mutationOperator, selectionOperator,
-//        new DominanceComparator<S>(), evaluator);
-//  }
-//  /**
-//   * Constructor
-//   */
-//  public aNSGA(Problem<S> problem, int maxEvaluations, int populationSize,
-//               CrossoverOperator<S> crossoverOperator, MutationOperator<S> mutationOperator,
-//               SelectionOperator<List<S>, S> selectionOperator, Comparator<S> dominanceComparator, SolutionListEvaluator<S> evaluator) {
-//    super(problem);
-//    this.maxEvaluations = maxEvaluations;
-//    setMaxPopulationSize(populationSize); ;
-//
-//    this.crossoverOperator = crossoverOperator;
-//    this.mutationOperator = mutationOperator;
-//    this.selectionOperator = selectionOperator;
-//
-//    this.evaluator = evaluator;
-//    this.dominanceComparator = dominanceComparator ;
-//  }
-
   /** Constructor */
   public aNSGA(aNSGABuilder<S> builder) { // can be created from the NSGAIIIBuilder within the same package
     super(builder.getProblem()) ;
@@ -92,11 +56,6 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 
     (new ReferencePoint<S>()).generateReferencePoints(referencePoints,getProblem().getNumberOfObjectives() , numberOfDivisions);
-
-//    int populationSize = referencePoints.size();
-//    while (populationSize%4>0) {
-//      populationSize++;
-//    }
 
     setMaxPopulationSize(100);
 
