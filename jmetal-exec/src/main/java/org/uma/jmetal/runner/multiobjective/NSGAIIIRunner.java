@@ -39,8 +39,9 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
 	    SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
 	    String referenceParetoFront = "";
 
-    String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1" ;
-    referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+    String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT6" ;
+//    String problemName = "org.uma.jmetal.problem.multiobjective.MultiobjectiveTSP";
+    referenceParetoFront = "/pareto_fronts/ZDT6.pf";
 
     problem = ProblemUtils.loadProblem(problemName);
 

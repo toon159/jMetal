@@ -156,10 +156,11 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     long_line = p1.distance0ytox0(p2);
 //    System.out.println(short_line/long_line);
     ratio = short_line/long_line;
-    System.out.println("short " + short_line + " long " + long_line);
+//    System.out.println("short " + short_line + " long " + long_line);
     RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
+//    System.out.println(ratio);
 
-    if (2 < 925){
+    if (ratio < 0.6){
 //      2
 //      System.out.println(2);
 //      RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;

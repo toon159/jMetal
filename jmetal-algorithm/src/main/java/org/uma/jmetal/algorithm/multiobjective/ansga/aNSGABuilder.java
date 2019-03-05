@@ -9,7 +9,7 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.comparator.DominanceComparator;
-import org.uma.jmetal.util.comparator.RankingAndAdaptiveSelectionComparator;
+import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
@@ -47,7 +47,7 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<aNS
     populationSize = 100;
     this.crossoverOperator = crossoverOperator ;
     this.mutationOperator = mutationOperator ;
-    selectionOperator = new BinaryTournamentSelection<S>(new RankingAndAdaptiveSelectionComparator<>()) ;
+    selectionOperator = new BinaryTournamentSelection<S>(new RankingAndCrowdingDistanceComparator<>()) ;
     evaluator = new SequentialSolutionListEvaluator<S>();
     dominanceComparator = new DominanceComparator<>();
 
