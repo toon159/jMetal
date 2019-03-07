@@ -2,7 +2,6 @@ package org.uma.jmetal.runner.multiobjective;
 //NSGAIII
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.ansga.aNSGABuilder;
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
@@ -13,6 +12,7 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.*;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -37,18 +37,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner  {
         SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
         String referenceParetoFront = "" ;
 
-////        load a problem
-//        String problemName ;
-//        if (args.length == 1) {
-//        problemName = args[0];
-//        } else if (args.length == 2) {
-//        problemName = args[0] ;
-//        referenceParetoFront = args[1] ;
-//        } else {
-//        problemName = "org.uma.jmetal.problem.multiobjective.dtlz.ZDT1";
-////            problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
-////        referenceParetoFront = "jmetal-problem/src/test/resources/pareto_fronts/ZDT1.pf" ;
-//        }
+        JMetalRandom.getInstance().setSeed(1);
 
         String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1" ;
         referenceParetoFront = "/pareto_fronts/ZDT1.pf";

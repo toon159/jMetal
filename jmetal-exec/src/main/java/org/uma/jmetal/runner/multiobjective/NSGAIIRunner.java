@@ -12,6 +12,7 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.*;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -36,6 +37,8 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     MutationOperator<DoubleSolution> mutation;
     SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
     String referenceParetoFront = "" ;
+    JMetalRandom.getInstance().setSeed(1);
+
 
     String problemName ;
     if (args.length == 1) {

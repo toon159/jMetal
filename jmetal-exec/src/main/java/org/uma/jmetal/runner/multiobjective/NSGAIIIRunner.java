@@ -13,6 +13,7 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.*;
 import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -38,6 +39,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
 	    MutationOperator<DoubleSolution> mutation;
 	    SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
 	    String referenceParetoFront = "";
+    JMetalRandom.getInstance().setSeed(1);
 
     String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1" ;
     referenceParetoFront = "/pareto_fronts/ZDT1.pf";
@@ -58,7 +60,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
             .setCrossoverOperator(crossover)
             .setMutationOperator(mutation)
             .setSelectionOperator(selection)
-            .setMaxIterations(300)
+            .setMaxIterations(25000)
             .build() ;
 
     AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
