@@ -27,8 +27,7 @@ public class NSGAIIIBuilder<S extends Solution<?>> implements AlgorithmBuilder<N
   /** Builder constructor */
   public NSGAIIIBuilder(Problem<S> problem) {
     this.problem = problem ;
-    maxIterations = 25000 ;
-    populationSize = 100 ;
+//    maxIterations = 25000 ;
     evaluator = new SequentialSolutionListEvaluator<S>() ;
   }
 

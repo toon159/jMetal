@@ -22,65 +22,65 @@ import java.util.List;
  * Class to configure and run the NSGA-III algorithm
  */
 public class NSGAIIIRunner extends AbstractAlgorithmRunner {
-  /**
-   * @param args Command line arguments.
-   * @throws java.io.IOException
-   * @throws SecurityException
-   * @throws ClassNotFoundException
-   * Usage: three options
-   *        - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner
-   *        - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName
-   *        - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName paretoFrontFile
-   */
-  public static void main(String[] args) throws JMetalException, FileNotFoundException {
-	    Problem<DoubleSolution> problem;
-	    Algorithm<List<DoubleSolution>> algorithm;
-	    CrossoverOperator<DoubleSolution> crossover;
-	    MutationOperator<DoubleSolution> mutation;
-	    SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
-	    String referenceParetoFront = "";
-    JMetalRandom.getInstance().setSeed(1);
+    /**
+     * @param args Command line arguments.
+     * @throws java.io.IOException
+     * @throws SecurityException
+     * @throws ClassNotFoundException Usage: three options
+     *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner
+     *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName
+     *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName paretoFrontFile
+     */
+    public static void main(String[] args) throws JMetalException, FileNotFoundException {
+        Problem<DoubleSolution> problem;
+        Algorithm<List<DoubleSolution>> algorithm;
+        CrossoverOperator<DoubleSolution> crossover;
+        MutationOperator<DoubleSolution> mutation;
+        SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
+        String referenceParetoFront = "";
+        JMetalRandom.getInstance().setSeed(1);
 
-    String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1" ;
-    referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
+        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
 
-    problem = ProblemUtils.loadProblem(problemName);
+        problem = ProblemUtils.loadProblem(problemName);
 
-    double crossoverProbability = 0.9 ;
-    double crossoverDistributionIndex = 20.0 ;
-    crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex) ;
+        double crossoverProbability = 0.9;
+        double crossoverDistributionIndex = 20.0;
+        crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
 
-    double mutationProbability = 1.0 / problem.getNumberOfVariables() ;
-    double mutationDistributionIndex = 20.0 ;
-    mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex) ;
-    
-    selection = new BinaryTournamentSelection<DoubleSolution>();
-    
-    algorithm = new NSGAIIIBuilder<>(problem)
-            .setCrossoverOperator(crossover)
-            .setMutationOperator(mutation)
-            .setSelectionOperator(selection)
-            .setMaxIterations(25000)
-            .build() ;
+        double mutationProbability = 1.0 / problem.getNumberOfVariables();
+        double mutationDistributionIndex = 20.0;
+        mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
 
-    AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
-            .execute() ;
+        selection = new BinaryTournamentSelection<DoubleSolution>();
 
-    List<DoubleSolution> population = algorithm.getResult() ;
-    long computingTime = algorithmRunner.getComputingTime() ;
+        algorithm = new NSGAIIIBuilder<>(problem)
+                .setCrossoverOperator(crossover)
+                .setMutationOperator(mutation)
+                .setSelectionOperator(selection)
+                .setMaxIterations(25000)
+                .setPopulationSize(100)
+                .build();
 
-    new SolutionListOutput(population)
-            .setSeparator("\t")
-            .setVarFileOutputContext(new DefaultFileOutputContext("VAR.tsv"))
-            .setFunFileOutputContext(new DefaultFileOutputContext("FUN.tsv"))
-            .print() ;
+        AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
+                .execute();
 
-    JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
-    JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
-    JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
-    printFinalSolutionSet(population);
-    if (!referenceParetoFront.equals("")) {
-        printQualityIndicators(population, referenceParetoFront) ;
+        List<DoubleSolution> population = algorithm.getResult();
+        long computingTime = algorithmRunner.getComputingTime();
+
+        new SolutionListOutput(population)
+                .setSeparator("\t")
+                .setVarFileOutputContext(new DefaultFileOutputContext("VAR.tsv"))
+                .setFunFileOutputContext(new DefaultFileOutputContext("FUN.tsv"))
+                .print();
+
+        JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
+        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
+        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
+        printFinalSolutionSet(population);
+        if (!referenceParetoFront.equals("")) {
+            printQualityIndicators(population, referenceParetoFront);
+        }
     }
-  }
 }

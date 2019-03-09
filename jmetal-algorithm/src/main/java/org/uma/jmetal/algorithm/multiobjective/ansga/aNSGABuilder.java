@@ -3,14 +3,11 @@ package org.uma.jmetal.algorithm.multiobjective.ansga;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
-import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmBuilder;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.comparator.DominanceComparator;
-import org.uma.jmetal.util.comparator.RankingAndAdaptiveSelectionComparator;
-import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
 
@@ -21,123 +18,132 @@ import java.util.List;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<aNSGA<S>> {
-  public enum NSGAIIVariant {NSGAII, SteadyStateNSGAII, Measures, NSGAII45}
+    public enum NSGAIIVariant {NSGAII, SteadyStateNSGAII, Measures, NSGAII45}
 
-  /**
-   * NSGAIIBuilder class
-   */
-  private final Problem<S> problem;
-  private int maxEvaluations; // maxIterations in NSGAIII
-  private int populationSize;
-  private CrossoverOperator<S>  crossoverOperator;
-  private MutationOperator<S> mutationOperator;
-  private SelectionOperator<List<S>, S> selectionOperator;
-  private SolutionListEvaluator<S> evaluator;
-  private Comparator<S> dominanceComparator ;
+    /**
+     * NSGAIIBuilder class
+     */
+    private final Problem<S> problem;
+    private int maxIterations; // maxIterations in NSGAIII
+    private int populationSize;
+    private CrossoverOperator<S> crossoverOperator;
+    private MutationOperator<S> mutationOperator;
+    private SelectionOperator<List<S>, S> selectionOperator;
 
-  private NSGAIIVariant variant;
+    private SolutionListEvaluator<S> evaluator;
 
-  /**
-   * aNSGABuilder constructor
-   */
-  public aNSGABuilder(Problem<S> problem, CrossoverOperator<S> crossoverOperator,
-                      MutationOperator<S> mutationOperator) {
-    this.problem = problem;
-    maxEvaluations = 25000;
-    populationSize = 100;
-    this.crossoverOperator = crossoverOperator ;
-    this.mutationOperator = mutationOperator ;
-    selectionOperator = new BinaryTournamentSelection<S>(new RankingAndAdaptiveSelectionComparator<>()) ;
-    evaluator = new SequentialSolutionListEvaluator<S>();
-    dominanceComparator = new DominanceComparator<>();
+    private Comparator<S> dominanceComparator;
 
-    this.variant = NSGAIIVariant.NSGAII ;
-  }
+    private NSGAIIVariant variant;
 
+    /**
+     * aNSGABuilder constructor
+     */
+    public aNSGABuilder(Problem<S> problem) {
+        this.problem = problem;
+//        maxIterations = 25000;
+        populationSize = 100;
+//        selectionOperator = new BinaryTournamentSelection<S>(new RankingAndCrowdingDistanceComparator<>());
+        evaluator = new SequentialSolutionListEvaluator<S>();
+        dominanceComparator = new DominanceComparator<>();
 
-  public aNSGABuilder<S> setMaxEvaluations(int maxEvaluations) {
-    if (maxEvaluations < 0) {
-      throw new JMetalException("maxEvaluations is negative: " + maxEvaluations);
-    }
-    this.maxEvaluations = maxEvaluations;
-
-    return this;
-  }
-
-  public aNSGABuilder<S> setPopulationSize(int populationSize) {
-    if (populationSize < 0) {
-      throw new JMetalException("Population size is negative: " + populationSize);
+        this.variant = NSGAIIVariant.NSGAII;
     }
 
-    this.populationSize = populationSize;
 
-    return this;
-  }
+    public aNSGABuilder<S> setMaxIterations(int maxIterations) {
+        if (maxIterations < 0) {
+            throw new JMetalException("maxIterations is negative: " + maxIterations);
+        }
+        this.maxIterations = maxIterations;
 
-  public aNSGABuilder<S> setSelectionOperator(SelectionOperator<List<S>, S> selectionOperator) {
-    if (selectionOperator == null) {
-      throw new JMetalException("selectionOperator is null");
+        return this;
     }
-    this.selectionOperator = selectionOperator;
 
-    return this;
-  }
+    public aNSGABuilder<S> setPopulationSize(int populationSize) {
+        if (populationSize < 0) {
+            throw new JMetalException("Population size is negative: " + populationSize);
+        }
 
-  public aNSGABuilder<S> setSolutionListEvaluator(SolutionListEvaluator<S> evaluator) {
-    if (evaluator == null) {
-      throw new JMetalException("evaluator is null");
+        this.populationSize = populationSize;
+
+        return this;
     }
-    this.evaluator = evaluator;
 
-    return this;
-  }
+    public aNSGABuilder<S> setSelectionOperator(SelectionOperator<List<S>, S> selectionOperator) {
+        if (selectionOperator == null) {
+            throw new JMetalException("selectionOperator is null");
+        }
+        this.selectionOperator = selectionOperator;
 
-  public aNSGABuilder<S> setDominanceComparator(Comparator<S> dominanceComparator) {
-    if (dominanceComparator == null) {
-      throw new JMetalException("dominanceComparator is null");
+        return this;
     }
-    this.dominanceComparator = dominanceComparator ;
 
-    return this;
-  }
+    public aNSGABuilder<S> setCrossoverOperator(CrossoverOperator<S> crossoverOperator) {
+        this.crossoverOperator = crossoverOperator;
+        return this;
+    }
+
+    public aNSGABuilder<S> setMutationOperator(MutationOperator<S> mutationOperator) {
+        this.mutationOperator = mutationOperator;
+        return this;
+    }
+
+    public aNSGABuilder<S> setSolutionListEvaluator(SolutionListEvaluator<S> evaluator) {
+        if (evaluator == null) {
+            throw new JMetalException("evaluator is null");
+        }
+        this.evaluator = evaluator;
+
+        return this;
+    }
+
+    public aNSGABuilder<S> setDominanceComparator(Comparator<S> dominanceComparator) {
+        if (dominanceComparator == null) {
+            throw new JMetalException("dominanceComparator is null");
+        }
+        this.dominanceComparator = dominanceComparator;
+
+        return this;
+    }
 
 
-  public aNSGABuilder<S> setVariant(NSGAIIVariant variant) {
-    this.variant = variant;
+    public aNSGABuilder<S> setVariant(NSGAIIVariant variant) {
+        this.variant = variant;
 
-    return this;
-  }
+        return this;
+    }
 
-  /* Getters */
-  public Problem<S> getProblem() {
-    return problem;
-  }
+    /* Getters */
+    public Problem<S> getProblem() {
+        return problem;
+    }
 
-  public int getMaxIterations() {
-    return maxEvaluations;
-  }
+    public int getPopulationSize() {
+        return populationSize;
+    }
 
-  public int getPopulationSize() {
-    return populationSize;
-  }
+    public CrossoverOperator<S> getCrossoverOperator() {
+        return crossoverOperator;
+    }
 
-  public CrossoverOperator<S> getCrossoverOperator() {
-    return crossoverOperator;
-  }
+    public MutationOperator<S> getMutationOperator() {
+        return mutationOperator;
+    }
 
-  public MutationOperator<S> getMutationOperator() {
-    return mutationOperator;
-  }
+    public SelectionOperator<List<S>, S> getSelectionOperator() {
+        return selectionOperator;
+    }
 
-  public SelectionOperator<List<S>, S> getSelectionOperator() {
-    return selectionOperator;
-  }
+    public SolutionListEvaluator<S> getEvaluator() {
+        return evaluator;
+    }
 
-  public SolutionListEvaluator<S> getEvaluator() {
-    return evaluator;
-  }
+    public int getMaxIterations() {
+        return maxIterations;
+    }
 
-  public aNSGA<S> build() {
-    return new aNSGA<>(this);
-  }
+    public aNSGA<S> build() {
+        return new aNSGA<>(this);
+    }
 }

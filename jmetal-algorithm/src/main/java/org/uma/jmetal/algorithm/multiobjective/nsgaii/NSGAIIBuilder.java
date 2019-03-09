@@ -55,7 +55,7 @@ public class NSGAIIBuilder<S extends Solution<?>> implements AlgorithmBuilder<NS
 
   public NSGAIIBuilder<S> setMaxEvaluations(int maxEvaluations) {
     if (maxEvaluations < 0) {
-      throw new JMetalException("maxEvaluations is negative: " + maxEvaluations);
+      throw new JMetalException("maxIterations is negative: " + maxEvaluations);
     }
     this.maxEvaluations = maxEvaluations;
 
