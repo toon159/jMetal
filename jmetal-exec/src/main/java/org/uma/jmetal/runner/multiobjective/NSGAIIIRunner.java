@@ -11,6 +11,7 @@ import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.*;
+import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
@@ -53,7 +54,9 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         double mutationDistributionIndex = 20.0;
         mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
 
-        selection = new BinaryTournamentSelection<DoubleSolution>();
+        selection = new BinaryTournamentSelection<DoubleSolution>(
+                new RankingAndCrowdingDistanceComparator<DoubleSolution>());
+//        selection = new BinaryTournamentSelection<DoubleSolution>();
 
         algorithm = new NSGAIIIBuilder<>(problem)
                 .setCrossoverOperator(crossover)
