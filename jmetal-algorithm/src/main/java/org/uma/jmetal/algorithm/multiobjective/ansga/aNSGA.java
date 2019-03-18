@@ -4,14 +4,21 @@ import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
+import org.uma.jmetal.qualityindicator.impl.Spread;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
+import org.uma.jmetal.util.front.Front;
+import org.uma.jmetal.util.front.imp.ArrayFront;
+import org.uma.jmetal.util.front.util.FrontNormalizer;
+import org.uma.jmetal.util.front.util.FrontUtils;
+import org.uma.jmetal.util.point.PointSolution;
 import org.uma.jmetal.util.solutionattribute.Ranking;
 import org.uma.jmetal.util.solutionattribute.impl.DominanceRanking;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +44,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected double t = 100;
     protected double ti = t;
     protected double coolingRate = 0.9;
+    protected double spreadN;
 
 
     /**
@@ -170,6 +178,20 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         //    double x1 = lastFront<S>.;
 //    Fitness<S> f2 = new Fitness<>();
 //    ratio = f1/f2
+        String referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+        Front referenceFront = null;
+        try {
+            referenceFront = new ArrayFront(referenceParetoFront);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront) ;
+        Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront) ;
+        Front normalizedFront = frontNormalizer.normalize(new ArrayFront(population)) ;
+        List<PointSolution> normalizedPopulation = FrontUtils
+                .convertFrontToSolutionList(normalizedFront) ;
+//        JMetalLogger.logger.info("Spread (N)      : " + new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation));
+        spreadN = new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
         if (0 > 925) {
 //      2
             isNSGAII = true;
