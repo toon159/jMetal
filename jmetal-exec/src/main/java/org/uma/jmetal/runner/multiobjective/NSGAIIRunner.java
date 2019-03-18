@@ -61,8 +61,10 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     double mutationDistributionIndex = 20.0 ;
     mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex) ;
 
-    selection = new BinaryTournamentSelection<DoubleSolution>(
-        new RankingAndCrowdingDistanceComparator<DoubleSolution>());
+//    selection = new BinaryTournamentSelection<DoubleSolution>(
+//        new RankingAndCrowdingDistanceComparator<DoubleSolution>());
+            selection = new BinaryTournamentSelection<DoubleSolution>();
+
 
     algorithm = new NSGAIIBuilder<DoubleSolution>(problem, crossover, mutation)
         .setSelectionOperator(selection)
