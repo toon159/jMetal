@@ -65,7 +65,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
                 .setMaxIterations(25000)
-                .setPopulationSize(16)
+                .setPopulationSize(100)
                 .build();
 
 

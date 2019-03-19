@@ -7,9 +7,9 @@ import java.util.Comparator;
 /**
  * Compares solutions based on their achievement scalarization value (ASV). The
  * ASV is always defined for a specific objective k. A solution x dominates
- * solution y w.r.t. to their ASV, if the maximum of all objectives without k is
+ * solution y w.r.startingTemp. to their ASV, if the maximum of all objectives without k is
  * smaller for x compared to y. If both maxima are the same, solutions are
- * compared w.r.t. to objective k. Achievement scalarization values can be used
+ * compared w.r.startingTemp. to objective k. Achievement scalarization values can be used
  * for identifying extreme points.
  *
  * @param <S> The solution type.

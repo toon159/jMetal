@@ -41,8 +41,8 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         String referenceParetoFront = "";
         JMetalRandom.getInstance().setSeed(1);
 
-        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
-        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT6";
+        referenceParetoFront = "/pareto_fronts/ZDT6.pf";
 
         problem = ProblemUtils.loadProblem(problemName);
 

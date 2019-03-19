@@ -56,7 +56,7 @@ public class CovarianceMatrixAdaptationEvolutionStrategy
   // time constant for cumulation for c
   private double cumulationC;
 
-  // t-const for cumulation for sigma control
+  // startingTemp-const for cumulation for sigma control
   private double cumulationSigma;
 
   // learning rate for rank-one update of c
@@ -263,7 +263,7 @@ public class CovarianceMatrixAdaptationEvolutionStrategy
     cumulationC =
         (4 + muEff / numberOfVariables) / (numberOfVariables + 4 + 2 * muEff / numberOfVariables);
 
-    // t-const for cumulation for sigma control
+    // startingTemp-const for cumulation for sigma control
     cumulationSigma = (muEff + 2) / (numberOfVariables + muEff + 5);
 
     // learning rate for rank-one update of C

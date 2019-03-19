@@ -55,6 +55,9 @@ public class NSGAIII<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, 
 
     setMaxPopulationSize(populationSize);
 
+//    manual set population
+    setMaxPopulationSize(builder.getPopulationSize());
+
     JMetalLogger.logger.info("rpssize: " + referencePoints.size());
     JMetalLogger.logger.info("popsize: " + populationSize);
   }
@@ -141,7 +144,7 @@ public class NSGAIII<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, 
         addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
       rankingIndex++;
     }
-    
+//    JMetalLogger.logger.info("" + pop.size());
     // A copy of the reference list should be used as parameter of the environmental selection
     EnvironmentalSelection<S> selection =
             new EnvironmentalSelection<>(fronts,getMaxPopulationSize(),getReferencePointsCopy(),

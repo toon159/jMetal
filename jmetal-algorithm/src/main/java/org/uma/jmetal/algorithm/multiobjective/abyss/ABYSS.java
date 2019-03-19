@@ -304,7 +304,7 @@ public class ABYSS extends AbstractScatterSearch<DoubleSolution, List<DoubleSolu
 
     if (!dominated) {
       marked.setAttribute(solution, false);
-      if (referenceSet1.size() < referenceSet1Size) { //refSet1 isn't full
+      if (referenceSet1.size() < referenceSet1Size) { //refSet1 isn'startingTemp full
         referenceSet1.add(solution);
       } else {
         archive.add(solution);
