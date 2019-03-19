@@ -17,6 +17,9 @@ import org.uma.jmetal.util.front.util.FrontNormalizer;
 import org.uma.jmetal.util.front.util.FrontUtils;
 import org.uma.jmetal.util.point.PointSolution;
 import org.uma.jmetal.util.pseudorandom.RandomGenerator;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 import org.uma.jmetal.util.solutionattribute.Ranking;
 import org.uma.jmetal.util.solutionattribute.impl.DominanceRanking;
 
@@ -46,20 +49,24 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     final protected double startingTemp = 100;
     protected double minTemp = 0.01;
     protected double temp = startingTemp;
-    final protected int startingTempCounter = 10;
+    final protected int startingTempCounter = 100;
     protected int tempCounter = startingTempCounter;
     protected double coolingRate = 0.9;
     protected double numIterAnnealing = 100;
     protected double[] result;
-    protected double spreadN;
-    protected double gdN;
+    protected double spreadN = 0.1;
+    protected double gdN = 1;
     protected double newSpreadN;
     protected double newGdN;
     protected double deltaE;
     protected double currentE;
     protected double nextE;
-    protected RandomGenerator<Double> randomGenerator;
+    protected JMetalRandom random;
     protected String referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+    private double deltaQ = 1;
+    boolean change = false;
+
+    private RandomGenerator<Double> randomGenerator ;
     /**
      * Constructor
      */
@@ -180,10 +187,17 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //      increment ranking index
             rankingIndex++;
         }
-        int x = 0;
-        JMetalLogger.logger.info("" + gdN);
+//        System.out.println("" + JMetalRandom.getInstance().nextDouble(0, 1));
+//        calculate the energy
+        result = getValue(pop);
+        newSpreadN = result[0];
+        newGdN = result[1];
+        deltaE = deltaSpread(newSpreadN, spreadN) + deltaGD(newGdN, gdN);
 
-        if (0 < 925) {
+        if (shouldChange(temp, deltaE)) {
+            change = !change;
+        }
+        if (change) {
 //      2
             isNSGAII = true;
             RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
@@ -201,9 +215,6 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         }
 //        JMetalLogger.logger.info("" + pop.size());
 
-        result = getValue(pop);
-        spreadN = result[0];
-        gdN = result[1];
         if (!shouldAccept(temp, deltaE)){
             pop = population;
         }
@@ -215,7 +226,8 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             temp *= coolingRate;
             tempCounter = startingTempCounter;
         }
-
+        gdN = newGdN;
+        spreadN = newSpreadN;
         return pop;
     }
 
@@ -259,11 +271,11 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         return Math.exp(deltaE / temp);
     }
     private boolean shouldAccept(double temp, double deltaE) {
-        return (deltaE > 0) || (randomGenerator.getRandomValue() <= probabilityOfAcceptance(temp, deltaE));
+        return (deltaE > 0) || (JMetalRandom.getInstance().nextDouble(0, 1) <= probabilityOfAcceptance(temp, deltaE));
     }
 
-    private boolean shouldUseNsgaII() {
-        return true;
+    private boolean shouldChange(double temp, double deltaQ) {
+        return (deltaQ < 0) || (JMetalRandom.getInstance().nextDouble(0, 1) >= probabilityOfAcceptance(temp, deltaQ));
     }
 
     private double deltaSpread(double newS, double oldS) {
@@ -271,7 +283,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     }
 
     private double deltaGD(double newGD, double oldGD) {
-        return (newGD - oldGD) * 100 / oldGD;
+        return (newGD - oldGD) * -100 / oldGD;
     }
 
     private double[] getValue(List<S> population) {
