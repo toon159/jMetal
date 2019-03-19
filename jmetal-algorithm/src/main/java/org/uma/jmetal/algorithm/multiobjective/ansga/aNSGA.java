@@ -224,7 +224,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             tempCounter--;
         } else {
             temp *= coolingRate;
-            tempCounter = startingTempCounter;
+            tempCounter = (int) (startingTempCounter - temp);
         }
         gdN = newGdN;
         spreadN = newSpreadN;
