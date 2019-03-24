@@ -4,8 +4,7 @@ import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
-import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
-import org.uma.jmetal.qualityindicator.impl.Spread;
+import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
@@ -16,8 +15,6 @@ import org.uma.jmetal.util.front.imp.ArrayFront;
 import org.uma.jmetal.util.front.util.FrontNormalizer;
 import org.uma.jmetal.util.front.util.FrontUtils;
 import org.uma.jmetal.util.point.PointSolution;
-import org.uma.jmetal.util.pseudorandom.RandomGenerator;
-import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 import org.uma.jmetal.util.solutionattribute.Ranking;
@@ -47,17 +44,15 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected boolean isNSGAII;
 
     final protected double startingTemp = 100;
-    protected double minTemp = 0.01;
+    protected double minTemp = 0.0;
     protected double temp = startingTemp;
     final protected int startingTempCounter = 100;
     protected int tempCounter = startingTempCounter;
-    protected double coolingRate = 0.9;
+    protected double coolingRate = 10;
     protected double numIterAnnealing = 100;
-    protected double[] result;
-    protected double spreadN = 0.1;
-    protected double gdN = 1;
-    protected double newSpreadN;
-    protected double newGdN;
+    protected double result;
+    protected double hv = 1;
+    protected double newHv = 1;
     protected double deltaE;
     protected double currentE;
     protected double nextE;
@@ -189,10 +184,17 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         }
 //        System.out.println("" + JMetalRandom.getInstance().nextDouble(0, 1));
 //        calculate the energy
-        result = getValue(pop);
-        newSpreadN = result[0];
-        newGdN = result[1];
-        deltaE = deltaSpread(newSpreadN, spreadN) + deltaGD(newGdN, gdN);
+
+//        if first front > max population then use that front instead
+        if (pop.size() == 0) {
+            result = getValue(fronts.get(0));
+        } else {
+            result = getValue(pop);
+        }
+
+        newHv = result;
+        deltaE = hv - newHv;
+
 
         if (shouldChange(temp, deltaE)) {
             change = !change;
@@ -223,11 +225,10 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         if(tempCounter > 0) {
             tempCounter--;
         } else {
-            temp *= coolingRate;
-            tempCounter = (int) (startingTempCounter - temp);
+            temp -= coolingRate;
+            tempCounter = 30;
         }
-        gdN = newGdN;
-        spreadN = newSpreadN;
+        hv = newHv;
         return pop;
     }
 
@@ -271,25 +272,16 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         return Math.exp(deltaE / temp);
     }
     private boolean shouldAccept(double temp, double deltaE) {
-        return (deltaE > 0) || (JMetalRandom.getInstance().nextDouble(0, 1) <= probabilityOfAcceptance(temp, deltaE));
+        return true;
     }
 
-    private boolean shouldChange(double temp, double deltaQ) {
-        return (deltaQ < 0) || (JMetalRandom.getInstance().nextDouble(0, 1) >= probabilityOfAcceptance(temp, deltaQ));
+    private boolean shouldChange(double temp, double deltaE) {
+        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
+        double probOfAccept = probabilityOfAcceptance(temp, deltaE);
+        return (deltaE < 0) || probOfAccept < randomValue ;
     }
 
-    private double deltaSpread(double newS, double oldS) {
-        return (newS - oldS) * 100 / oldS;
-    }
-
-    private double deltaGD(double newGD, double oldGD) {
-        return (newGD - oldGD) * -100 / oldGD;
-    }
-
-    private double[] getValue(List<S> population) {
-        if (population.size() == 0) {
-            return new double[] {0, 0};
-        }
+    private double getValue(List<S> population) {
         Front referenceFront = null;
         try {
             referenceFront = new ArrayFront(referenceParetoFront);
@@ -302,9 +294,8 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         List<PointSolution> normalizedPopulation = FrontUtils
                 .convertFrontToSolutionList(normalizedFront) ;
 //        JMetalLogger.logger.info("Spread (N)      : " + new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation));
-        double spread, gd;
-        spread = new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
-        gd = new GenerationalDistance<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
-        return new double[] {spread, gd};
+        double hv;
+        hv = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
+        return hv;
     }
 }
