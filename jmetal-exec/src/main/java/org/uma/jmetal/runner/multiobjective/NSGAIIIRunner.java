@@ -62,7 +62,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setMaxIterations(25000)
+                .setMaxIterations(300)
                 .setPopulationSize(100)
                 .build();
 
@@ -81,7 +81,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
         JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
         JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
-        printFinalSolutionSet(population);
+        // printFinalSolutionSet(population);
         if (!referenceParetoFront.equals("")) {
             printQualityIndicators(population, referenceParetoFront);
         }

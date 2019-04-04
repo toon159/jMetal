@@ -47,8 +47,8 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
       problemName = args[0] ;
       referenceParetoFront = args[1] ;
     } else {
-      problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT6";
-      referenceParetoFront = "/pareto_fronts/ZDT6.pf" ;
+      problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
+      referenceParetoFront = "/pareto_fronts/ZDT1.pf" ;
     }
 
     problem = ProblemUtils.<DoubleSolution> loadProblem(problemName);
@@ -61,14 +61,15 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     double mutationDistributionIndex = 20.0 ;
     mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex) ;
 
-//    selection = new BinaryTournamentSelection<DoubleSolution>(
-//        new RankingAndCrowdingDistanceComparator<DoubleSolution>());
-            selection = new BinaryTournamentSelection<DoubleSolution>();
+    selection = new BinaryTournamentSelection<DoubleSolution>(
+        new RankingAndCrowdingDistanceComparator<DoubleSolution>());
+
+//    selection = new BinaryTournamentSelection<DoubleSolution>();
 
 
     algorithm = new NSGAIIBuilder<DoubleSolution>(problem, crossover, mutation)
         .setSelectionOperator(selection)
-        .setMaxEvaluations(25000)
+        .setMaxEvaluations(300)
         .setPopulationSize(100)
         .build() ;
 

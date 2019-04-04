@@ -278,6 +278,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     private boolean shouldChange(double temp, double deltaE) {
         double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
         double probOfAccept = probabilityOfAcceptance(temp, deltaE);
+//        probOfAccept < randomValue //at high temp can accept many cases
         return (deltaE < 0) || probOfAccept < randomValue ;
     }
 
