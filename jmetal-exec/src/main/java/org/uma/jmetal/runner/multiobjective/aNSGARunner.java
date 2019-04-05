@@ -41,8 +41,10 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
 
         JMetalRandom.getInstance().setSeed(1);
 
-        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
-        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+//        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
+//        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+        String problemName = args[0];
+        referenceParetoFront = args[1];
         problem = ProblemUtils.loadProblem(problemName);
 
 //        operators and algorithm are configured
@@ -82,12 +84,13 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
                 .setFunFileOutputContext(new DefaultFileOutputContext("FUN.tsv"))
                 .print();
 
-        JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
-        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
-        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
-        printFinalSolutionSet(population);
+//        JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
+//        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
+//        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
+//        printFinalSolutionSet(population);
         if (!referenceParetoFront.equals("")) {
-            printQualityIndicators(population, referenceParetoFront);
+//            JMetalLogger.logger.info(args[0]);
+            printHypervolume(population, referenceParetoFront);
     }
 }
 }

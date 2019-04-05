@@ -86,6 +86,6 @@ public class JMetalLogger implements Serializable {
 		LogManager manager = LogManager.getLogManager();
 		manager.readConfiguration(IOUtils.toInputStream(new String(stream
 				.toByteArray(), Charset.forName("UTF-8"))));
-		logger.info("Loggers configured with " + propertyFile);
+//		logger.info("Loggers configured with " + propertyFile);
 	}
 }

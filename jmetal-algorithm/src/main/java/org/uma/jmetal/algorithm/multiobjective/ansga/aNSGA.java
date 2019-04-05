@@ -92,8 +92,8 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 //        setMaxPopulationSize(population);
 
-        JMetalLogger.logger.info("rpssize: " + referencePoints.size());
-        JMetalLogger.logger.info("popsize: " + maxPopulationSize);
+//        JMetalLogger.logger.info("rpssize: " + referencePoints.size());
+//        JMetalLogger.logger.info("popsize: " + maxPopulationSize);
 
     }
 
