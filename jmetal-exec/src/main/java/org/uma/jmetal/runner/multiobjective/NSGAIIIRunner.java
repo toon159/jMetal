@@ -32,7 +32,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
      *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName
      *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName paretoFrontFile
      */
-    public static void main(String[] args) throws JMetalException, FileNotFoundException {
+    public static double main(String[] args) throws JMetalException, FileNotFoundException {
         Problem<DoubleSolution> problem;
         Algorithm<List<DoubleSolution>> algorithm;
         CrossoverOperator<DoubleSolution> crossover;
@@ -41,9 +41,8 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         String referenceParetoFront = "";
         JMetalRandom.getInstance().setSeed(1);
 
-        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT6";
-        referenceParetoFront = "/pareto_fronts/ZDT6.pf";
-
+        String problemName = args[0];
+        referenceParetoFront = args[1];
         problem = ProblemUtils.loadProblem(problemName);
 
         double crossoverProbability = 0.9;
@@ -71,7 +70,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
 
         List<DoubleSolution> population = algorithm.getResult();
         long computingTime = algorithmRunner.getComputingTime();
-
+/*
         new SolutionListOutput(population)
                 .setSeparator("\t")
                 .setVarFileOutputContext(new DefaultFileOutputContext("VAR.tsv"))
@@ -81,9 +80,10 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
         JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
         JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
-        // printFinalSolutionSet(population);
+         printFinalSolutionSet(population);
         if (!referenceParetoFront.equals("")) {
             printQualityIndicators(population, referenceParetoFront);
-        }
+        }*/
+        return getHypervolume(population, referenceParetoFront);
     }
 }

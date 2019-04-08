@@ -36,6 +36,20 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<aNS
 
     private NSGAIIVariant variant;
 
+    public String getReferenceParetoFront() {
+        return referenceParetoFront;
+    }
+
+    private String referenceParetoFront = "";
+
+
+    public aNSGABuilder<S> setReferenceParetoFront(String referenceParetoFront) {
+        this.referenceParetoFront = referenceParetoFront;
+        return this;
+    }
+
+
+
     /**
      * aNSGABuilder constructor
      */

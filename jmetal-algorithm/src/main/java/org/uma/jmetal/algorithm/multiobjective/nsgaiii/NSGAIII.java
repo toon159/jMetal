@@ -58,8 +58,8 @@ public class NSGAIII<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, 
 //    manual set population
     setMaxPopulationSize(builder.getPopulationSize());
 
-    JMetalLogger.logger.info("rpssize: " + referencePoints.size());
-    JMetalLogger.logger.info("popsize: " + populationSize);
+    /*JMetalLogger.logger.info("rpssize: " + referencePoints.size());
+    JMetalLogger.logger.info("popsize: " + populationSize);*/
   }
 
   @Override

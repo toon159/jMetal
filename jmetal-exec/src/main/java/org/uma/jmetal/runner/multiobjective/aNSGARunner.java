@@ -68,6 +68,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
                 .setSelectionOperator(selection)
                 .setMaxIterations(25000)
                 .setPopulationSize(100)
+                .setReferenceParetoFront(referenceParetoFront)
                 .build();
 
 

@@ -57,7 +57,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected double currentE;
     protected double nextE;
     protected JMetalRandom random;
-    protected String referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+    protected String referenceParetoFront;
     private double deltaQ = 1;
     boolean change = false;
 
@@ -73,7 +73,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         mutationOperator = builder.getMutationOperator();
         selectionOperator = builder.getSelectionOperator();
         maxPopulationSize = builder.getPopulationSize();
-
+        referenceParetoFront = builder.getReferenceParetoFront();
         evaluator = builder.getEvaluator();
         dominanceComparator = new DominanceComparator<>();
 
@@ -187,9 +187,9 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 //        if first front > max population then use that front instead
         if (pop.size() == 0) {
-            result = getValue(fronts.get(0));
+            result = getHypervolume(fronts.get(0));
         } else {
-            result = getValue(pop);
+            result = getHypervolume(pop);
         }
 
         newHv = result;
@@ -282,7 +282,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         return (deltaE < 0) || probOfAccept < randomValue ;
     }
 
-    private double getValue(List<S> population) {
+    private double getHypervolume(List<S> population) {
         Front referenceFront = null;
         try {
             referenceFront = new ArrayFront(referenceParetoFront);

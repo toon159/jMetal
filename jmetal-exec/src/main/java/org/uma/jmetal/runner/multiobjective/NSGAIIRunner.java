@@ -30,7 +30,7 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
    * Invoking command:
     java org.uma.jmetal.runner.multiobjective.NSGAIIRunner problemName [referenceFront]
    */
-  public static void main(String[] args) throws JMetalException, FileNotFoundException {
+  public static double main(String[] args) throws JMetalException, FileNotFoundException {
     Problem<DoubleSolution> problem;
     Algorithm<List<DoubleSolution>> algorithm;
     CrossoverOperator<DoubleSolution> crossover;
@@ -39,7 +39,7 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     String referenceParetoFront = "" ;
     JMetalRandom.getInstance().setSeed(1);
 
-
+/*
     String problemName ;
     if (args.length == 1) {
       problemName = args[0];
@@ -51,7 +51,11 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
       referenceParetoFront = "/pareto_fronts/ZDT1.pf" ;
     }
 
-    problem = ProblemUtils.<DoubleSolution> loadProblem(problemName);
+    problem = ProblemUtils.<DoubleSolution> loadProblem(problemName);*/
+
+    String problemName = args[0];
+    referenceParetoFront = args[1];
+    problem = ProblemUtils.loadProblem(problemName);
 
     double crossoverProbability = 0.9 ;
     double crossoverDistributionIndex = 20.0 ;
@@ -79,11 +83,13 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     List<DoubleSolution> population = algorithm.getResult() ;
     long computingTime = algorithmRunner.getComputingTime() ;
 
-    JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
+   /* JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
 
     printFinalSolutionSet(population);
     if (!referenceParetoFront.equals("")) {
       printQualityIndicators(population, referenceParetoFront) ;
-    }
+    }*/
+
+    return getHypervolume(population, referenceParetoFront);
   }
 }
