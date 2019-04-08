@@ -90,8 +90,9 @@ public abstract class AbstractAlgorithmRunner {
     JMetalLogger.logger.info(outputString);
   }
 
-  public static <S extends Solution<?>> void printHypervolume(List<S> population, String paretoFrontFile)
+  public static <S extends Solution<?>> double getHypervolume(List<S> population, String paretoFrontFile)
           throws FileNotFoundException {
+    double hv;
     Front referenceFront = new ArrayFront(paretoFrontFile);
     FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront) ;
 
@@ -100,10 +101,8 @@ public abstract class AbstractAlgorithmRunner {
     List<PointSolution> normalizedPopulation = FrontUtils
             .convertFrontToSolutionList(normalizedFront) ;
 
-    String outputString = "\n" ;
-    outputString += "Hypervolume (N) : " +
-            new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
-
-    JMetalLogger.logger.info(outputString);
+    hv = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
+    return hv;
+//    JMetalLogger.logger.info(outputString);
   }
 }

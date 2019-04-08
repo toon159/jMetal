@@ -30,7 +30,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
      * @throws FileNotFoundException Invoking command:
      *                               java org.uma.jmetal.runner.multiobjective.NSGAIIRunner problemName [referenceFront]
      */
-    public static void main(String[] args) throws JMetalException, FileNotFoundException {
+    public static double main(String[] args) throws JMetalException, FileNotFoundException {
 //        declares the type of the problem to solve
         Problem<DoubleSolution> problem;
         Algorithm<List<DoubleSolution>> algorithm;
@@ -88,9 +88,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
 //        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
 //        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
 //        printFinalSolutionSet(population);
-        if (!referenceParetoFront.equals("")) {
-//            JMetalLogger.logger.info(args[0]);
-            printHypervolume(population, referenceParetoFront);
+
+        return getHypervolume(population, referenceParetoFront);
     }
-}
 }
