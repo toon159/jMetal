@@ -100,6 +100,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     @Override
     protected void initProgress() {
         iterations = 1;
+//        System.out.println("start");
     }
 
     @Override
@@ -215,6 +216,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
                             getProblem().getNumberOfObjectives());
             pop = selection.execute(pop);
         }
+//        System.out.print(change?'2':'3');
 //        JMetalLogger.logger.info("" + pop.size());
 
         if (!shouldAccept(temp, deltaE)){

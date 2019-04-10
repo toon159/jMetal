@@ -66,7 +66,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setMaxIterations(25000)
+                .setMaxIterations(300)
                 .setPopulationSize(100)
                 .setReferenceParetoFront(referenceParetoFront)
                 .build();
