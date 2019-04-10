@@ -99,12 +99,12 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
     @Override
     protected void initProgress() {
-        iterations = 1;
+        temp = 300;
     }
 
     @Override
     protected void updateProgress() {
-        iterations++;
+        temp--;
     }
 
     @Override
@@ -187,6 +187,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 //        if first front > max population then use that front instead
         if (pop.size() == 0) {
+//            late, accept a solution which increase hv
             result = getHypervolume(fronts.get(0));
         } else {
             result = getHypervolume(pop);
@@ -220,14 +221,15 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         if (!shouldAccept(temp, deltaE)){
             pop = population;
         }
-
+/*
 //        change temp every x generations.
         if(tempCounter > 0) {
             tempCounter--;
         } else {
             temp -= coolingRate;
             tempCounter = 30;
-        }
+        }*/
+
         hv = newHv;
         return pop;
     }
@@ -279,7 +281,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
         double probOfAccept = probabilityOfAcceptance(temp, deltaE);
 //        probOfAccept < randomValue //at high temp can accept many cases
-        return (deltaE < 0) || probOfAccept < randomValue ;
+        return (deltaE < 0) || probOfAccept > randomValue ;
     }
 
     private double getHypervolume(List<S> population) {
