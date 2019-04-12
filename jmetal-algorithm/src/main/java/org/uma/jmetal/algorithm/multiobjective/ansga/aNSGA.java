@@ -200,16 +200,19 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         if (shouldChange(temp, deltaE)) {
             change = !change;
         }
+//        System.out.print(change);
         if (change) {
 //      2
             isNSGAII = true;
             RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
             rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator);
             pop = rankingAndCrowdingSelection.execute(jointPopulation);
+//            System.out.print(2);
+
         } else {
 //      3
             isNSGAII = false;
-//      System.out.println(3);
+//      System.out.print(3);
             // A copy of the reference list should be used as parameter of the environmental selection
             EnvironmentalSelection<S> selection =
                     new EnvironmentalSelection<>(fronts, getMaxPopulationSize(), getReferencePointsCopy(),
@@ -280,6 +283,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     private boolean shouldChange(double temp, double deltaE) {
         double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
         double probOfAccept = probabilityOfAcceptance(temp, deltaE);
+        System.out.print(probOfAccept + ", ");
 //        probOfAccept < randomValue //at high temp can accept many cases
         return (deltaE < 0) || probOfAccept > randomValue ;
     }

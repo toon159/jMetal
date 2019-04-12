@@ -37,7 +37,7 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     MutationOperator<DoubleSolution> mutation;
     SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
     String referenceParetoFront = "" ;
-    JMetalRandom.getInstance().setSeed(1);
+//    JMetalRandom.getInstance().setSeed(1);
 
 /*
     String problemName ;

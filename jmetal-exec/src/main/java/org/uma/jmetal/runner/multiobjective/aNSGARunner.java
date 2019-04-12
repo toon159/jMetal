@@ -39,7 +39,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
         SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
         String referenceParetoFront = "";
 
-        JMetalRandom.getInstance().setSeed(1);
+//        JMetalRandom.getInstance().setSeed(1);
 
 //        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
 //        referenceParetoFront = "/pareto_fronts/ZDT1.pf";

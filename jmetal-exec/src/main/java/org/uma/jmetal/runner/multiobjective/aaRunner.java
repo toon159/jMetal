@@ -30,13 +30,20 @@ public class aaRunner extends AbstractAlgorithmRunner {
 
 
     public static void main(String[] args) throws FileNotFoundException {
+        int n = 1;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[] {2.5, 2, 3});
         for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
             double[] hv = new double[3];
-            hv[0] = aNSGARunner.main(problemWithParetoFrontRef[i]);
-            hv[1] = NSGAIIRunner.main(problemWithParetoFrontRef[i]);
-            hv[2] = NSGAIIIRunner.main(problemWithParetoFrontRef[i]);
+            for (int j = 0; j < n; j++) {
+                hv[0] += aNSGARunner.main(problemWithParetoFrontRef[i]);
+//                hv[1] += NSGAIIRunner.main(problemWithParetoFrontRef[i]);
+//                hv[2] += NSGAIIIRunner.main(problemWithParetoFrontRef[i]);
+                System.out.println();
+            }
+            hv[0] /= n;
+//            hv[1] /= n;
+//            hv[2] /= n;
             list.add(hv);
         }
         aaExcel excel = new aaExcel(list);
