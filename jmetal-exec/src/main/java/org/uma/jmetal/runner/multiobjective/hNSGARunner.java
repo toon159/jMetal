@@ -39,7 +39,7 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
         SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
         String referenceParetoFront = "";
 
-        JMetalRandom.getInstance().setSeed(1);
+//        JMetalRandom.getInstance().setSeed(1);
 
 //        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
 //        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
@@ -66,7 +66,7 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setMaxIterations(300)
+                .setMaxIterations(2000)
                 .setPopulationSize(100)
                 .setReferenceParetoFront(referenceParetoFront)
                 .build();
@@ -77,15 +77,15 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
                 .execute();
 
         List<DoubleSolution> population = algorithm.getResult();
-        long computingTime = algorithmRunner.getComputingTime();
-
+//        long computingTime = algorithmRunner.getComputingTime();
+/*
         new SolutionListOutput(population)
                 .setSeparator("\t")
                 .setVarFileOutputContext(new DefaultFileOutputContext("VAR.tsv"))
                 .setFunFileOutputContext(new DefaultFileOutputContext("FUN.tsv"))
                 .print();
-
-        JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
+*/
+//        JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
 //        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
 //        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
 //        printFinalSolutionSet(population);

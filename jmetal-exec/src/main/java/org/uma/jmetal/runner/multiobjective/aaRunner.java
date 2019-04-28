@@ -1,6 +1,7 @@
 package org.uma.jmetal.runner.multiobjective;
 
 import org.uma.jmetal.runner.multiobjective.aNSGARunner;
+import org.uma.jmetal.runner.multiobjective.hNSGARunner;
 import org.uma.jmetal.runner.multiobjective.NSGAIIRunner;
 import org.uma.jmetal.runner.multiobjective.NSGAIIIRunner;
 import org.uma.jmetal.util.AbstractAlgorithmRunner;
@@ -26,10 +27,9 @@ public class aaRunner extends AbstractAlgorithmRunner {
             {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ6", "/pareto_fronts/DTLZ6.3D.pf"},
             {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ7", "/pareto_fronts/DTLZ7.3D.pf"}
     };
-    private static Object[][] data;
-
 
     public static void main(String[] args) throws FileNotFoundException {
+        int n = 30;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[] {2.5, 2, 3});
         for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
