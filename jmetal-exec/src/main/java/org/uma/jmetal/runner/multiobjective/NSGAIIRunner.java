@@ -56,6 +56,9 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     String problemName = args[0];
     referenceParetoFront = args[1];
     problem = ProblemUtils.loadProblem(problemName);
+    problem.setNumberOfObjectives(Integer.parseInt(args[3]));
+
+    int maxIterations = Integer.parseInt(args[2]);
 
     double crossoverProbability = 0.9 ;
     double crossoverDistributionIndex = 20.0 ;
@@ -74,7 +77,7 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
     algorithm = new NSGAIIBuilder<DoubleSolution>(problem, crossover, mutation)
         .setSelectionOperator(selection)
         .setMaxEvaluations(300)
-        .setPopulationSize(100)
+        .setPopulationSize(maxIterations)
         .build() ;
 
     AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)

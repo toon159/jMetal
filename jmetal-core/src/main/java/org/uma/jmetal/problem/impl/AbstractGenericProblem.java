@@ -35,7 +35,7 @@ public abstract class AbstractGenericProblem<S> implements Problem<S> {
     this.numberOfVariables = numberOfVariables;
   }
 
-  protected void setNumberOfObjectives(int numberOfObjectives) {
+  public void setNumberOfObjectives(int numberOfObjectives) {
     this.numberOfObjectives = numberOfObjectives;
   }
 

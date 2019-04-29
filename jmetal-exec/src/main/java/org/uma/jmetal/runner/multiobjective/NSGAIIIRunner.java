@@ -44,6 +44,9 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         String problemName = args[0];
         referenceParetoFront = args[1];
         problem = ProblemUtils.loadProblem(problemName);
+        problem.setNumberOfObjectives(Integer.parseInt(args[3]));
+
+        int maxIterations = Integer.parseInt(args[2]);
 
         double crossoverProbability = 0.9;
         double crossoverDistributionIndex = 20.0;
@@ -61,7 +64,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setMaxIterations(300)
+                .setMaxIterations(maxIterations)
                 .setPopulationSize(100)
                 .build();
 

@@ -38,6 +38,8 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
         MutationOperator<DoubleSolution> mutation;
         SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
         String referenceParetoFront = "";
+        String isInvert;
+        int maxIterations;
 
 //        JMetalRandom.getInstance().setSeed(1);
 
@@ -46,6 +48,11 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
         String problemName = args[0];
         referenceParetoFront = args[1];
         problem = ProblemUtils.loadProblem(problemName);
+        problem.setNumberOfObjectives(Integer.parseInt(args[3]));
+        maxIterations = Integer.parseInt(args[2]);
+        isInvert = args[4];
+        int acceptablePercents = Integer.parseInt(args[5]);
+
 
 //        operators and algorithm are configured
         double crossoverProbability = 0.9;
@@ -66,9 +73,11 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setMaxIterations(2000)
+                .setMaxIterations(maxIterations)
                 .setPopulationSize(100)
                 .setReferenceParetoFront(referenceParetoFront)
+                .setIsInvert(isInvert)
+                .setAcceptablePercents(acceptablePercents)
                 .build();
 
 

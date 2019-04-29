@@ -44,8 +44,11 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
     protected JMetalRandom random;
     protected String referenceParetoFront;
+    protected int acceptablePercents;
 
     private RandomGenerator<Double> randomGenerator ;
+
+    String isInvert;
     /**
      * Constructor
      */
@@ -60,6 +63,9 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         referenceParetoFront = builder.getReferenceParetoFront();
         evaluator = builder.getEvaluator();
         dominanceComparator = new DominanceComparator<>();
+        isInvert = builder.getIsInvert();
+        acceptablePercents = builder.getAcceptablePercents();
+
 
 
         /// NSGAIII
@@ -168,13 +174,29 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             rankingIndex++;
         }
 
-//        if first front < max population needed then use NSGA-II
-        if (pop.size() < maxPopulationSize) {
-            isNSGAII = true;
-        } else {
+        if (isInvert.equals("false")){
+//            if (pop.size() - maxPopulationSize <= acceptablePercents || maxPopulationSize - pop.size()  <= acceptablePercents){
+//                if (JMetalRandom.getInstance().nextInt(0, 100) > 50){
+//
+//                }
+//            }
+            //        if first front < max population needed then use NSGA-II
+            if (pop.size() < maxPopulationSize) {
+                isNSGAII = true;
+            } else {
 //        if first front >= max population needed, use NSGA-III instead
-            isNSGAII = false;
+                isNSGAII = false;
+            }
+        } else {
+            //        if first front < max population needed then use NSGA-II
+            if (pop.size() > maxPopulationSize) {
+                isNSGAII = true;
+            } else {
+//        if first front >= max population needed, use NSGA-III instead
+                isNSGAII = false;
+            }
         }
+
 
         if (isNSGAII) {
 //      2

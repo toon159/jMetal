@@ -42,6 +42,27 @@ public class hNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<hNS
 
     private String referenceParetoFront = "";
 
+    public int getAcceptablePercents() {
+        return acceptablePercents;
+    }
+
+    public hNSGABuilder<S> setAcceptablePercents(int acceptablePercents) {
+        this.acceptablePercents = acceptablePercents;
+        return this;
+    }
+
+    public int acceptablePercents;
+    public String getIsInvert() {
+        return isInvert;
+    }
+
+    public hNSGABuilder<S> setIsInvert(String isInvert) {
+        this.isInvert = isInvert;
+        return this;
+    }
+
+    public String isInvert = "";
+
 
     public hNSGABuilder<S> setReferenceParetoFront(String referenceParetoFront) {
         this.referenceParetoFront = referenceParetoFront;

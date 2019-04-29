@@ -18,5 +18,6 @@ public interface Problem<S> extends Serializable {
 
   /* Methods */
   void evaluate(S solution) ;
+  void setNumberOfObjectives(int numberOfObjectives) ;
   S createSolution() ;
 }
