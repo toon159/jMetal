@@ -166,6 +166,7 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         List<List<S>> fronts = new ArrayList<>();
         int rankingIndex = 0;
         int candidateSolutions = 0;
+        int numDiff = 0;
 //    while the number of solutions is less than pop
         while (candidateSolutions < getMaxPopulationSize()) {
 //      add fronts
@@ -173,31 +174,27 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             candidateSolutions += ranking.getSubfront(rankingIndex).size();
 //      if current rank + solutions <= max pop then add that rank
             if ((pop.size() + ranking.getSubfront(rankingIndex).size()) <= getMaxPopulationSize())
+
                 addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
 //      increment ranking index
             rankingIndex++;
         }
 
-        if (isInvert.equals("false")){
-//            if (pop.size() - maxPopulationSize <= acceptablePercents || maxPopulationSize - pop.size()  <= acceptablePercents){
-//                selectMethod = -1;
-//            }
-            //        if first front < max population needed then use NSGA-II
-            if (pop.size() < maxPopulationSize) {
-                selectMethod = 2;
-            } else {
-//        if first front >= max population needed, use NSGA-III instead
-                selectMethod = 3;
-            }
+        if (ranking.getSubfront(0).size() > getMaxPopulationSize()) {
+            numDiff = ranking.getSubfront(0).size() - getMaxPopulationSize();
         } else {
-            //        if first front < max population needed then use NSGA-II
-            if (pop.size() > maxPopulationSize) {
-                selectMethod = 3;
-            } else {
-//        if first front >= max population needed, use NSGA-III instead
-                selectMethod = 2;
-            }
+            numDiff = getMaxPopulationSize() - pop.size();
         }
+
+            if (numDiff <= acceptablePercents){
+                selectMethod = -1;
+            } else if (pop.size() == 0) {
+                //        if first front > max population needed then use NSGA-II
+                selectMethod = 2;
+            } else {
+//        if first front < max population needed, use NSGA-III instead
+                selectMethod = 3;
+            }
 
 
         if (selectMethod == 2) {
@@ -216,11 +213,9 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             pop = selection.execute(pop);
         } else {
 //    random select
-
             RankingAndRandomSelection<S> rankingAndRandomSelection;
             rankingAndRandomSelection = new RankingAndRandomSelection<>(getMaxPopulationSize(), dominanceComparator);
             pop = rankingAndRandomSelection.execute(jointPopulation);
-
         }
 //        System.out.print(change?'2':'3');
 //        JMetalLogger.logger.info("" + pop.size());
