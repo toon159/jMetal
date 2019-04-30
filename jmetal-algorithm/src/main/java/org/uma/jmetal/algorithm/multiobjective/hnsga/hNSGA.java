@@ -3,7 +3,9 @@ package org.uma.jmetal.algorithm.multiobjective.hnsga;
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.hnsga.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.hnsga.util.ReferencePoint;
+import org.uma.jmetal.operator.impl.selection.RandomSelection;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
+import org.uma.jmetal.operator.impl.selection.RankingAndRandomSelection;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.SolutionListUtils;
@@ -41,6 +43,7 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected List<ReferencePoint<S>> referencePoints = new Vector<>();
 
     protected boolean isNSGAII;
+    protected int selectMethod;
 
     protected JMetalRandom random;
     protected String referenceParetoFront;
@@ -65,6 +68,7 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         dominanceComparator = new DominanceComparator<>();
         isInvert = builder.getIsInvert();
         acceptablePercents = builder.getAcceptablePercents();
+        selectMethod = -1;
 
 
 
@@ -176,46 +180,50 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
         if (isInvert.equals("false")){
 //            if (pop.size() - maxPopulationSize <= acceptablePercents || maxPopulationSize - pop.size()  <= acceptablePercents){
-//                if (JMetalRandom.getInstance().nextInt(0, 100) > 50){
-//
-//                }
+//                selectMethod = -1;
 //            }
             //        if first front < max population needed then use NSGA-II
             if (pop.size() < maxPopulationSize) {
-                isNSGAII = true;
+                selectMethod = 2;
             } else {
 //        if first front >= max population needed, use NSGA-III instead
-                isNSGAII = false;
+                selectMethod = 3;
             }
         } else {
             //        if first front < max population needed then use NSGA-II
             if (pop.size() > maxPopulationSize) {
-                isNSGAII = true;
+                selectMethod = 3;
             } else {
 //        if first front >= max population needed, use NSGA-III instead
-                isNSGAII = false;
+                selectMethod = 2;
             }
         }
 
 
-        if (isNSGAII) {
-//      2
+        if (selectMethod == 2) {
+//    2
 
             RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
             rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator);
             pop = rankingAndCrowdingSelection.execute(jointPopulation);
-        } else {
-//      3
+        } else if(selectMethod == 3) {
+//    3
 
             // A copy of the reference list should be used as parameter of the environmental selection
             EnvironmentalSelection<S> selection =
                     new EnvironmentalSelection<>(fronts, getMaxPopulationSize(), getReferencePointsCopy(),
                             getProblem().getNumberOfObjectives());
             pop = selection.execute(pop);
+        } else {
+//    random select
+
+            RankingAndRandomSelection<S> rankingAndRandomSelection;
+            rankingAndRandomSelection = new RankingAndRandomSelection<>(getMaxPopulationSize(), dominanceComparator);
+            pop = rankingAndRandomSelection.execute(jointPopulation);
+
         }
 //        System.out.print(change?'2':'3');
 //        JMetalLogger.logger.info("" + pop.size());
-
 
 
         return pop;

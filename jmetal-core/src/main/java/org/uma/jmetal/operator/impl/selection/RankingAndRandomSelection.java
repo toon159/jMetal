@@ -22,20 +22,20 @@ import java.util.List;
  * @author Antonio J. Nebro, Juan J. Durillo
  */
 @SuppressWarnings("serial")
-public class RankingAndAdaptiveSelection<S extends Solution<?>>
+public class RankingAndRandomSelection<S extends Solution<?>>
         implements SelectionOperator<List<S>,List<S>> {
     private final int solutionsToSelect ;
     private Comparator<S> dominanceComparator ;
 
 
     /** Constructor */
-    public RankingAndAdaptiveSelection(int solutionsToSelect, Comparator<S> dominanceComparator) {
+    public RankingAndRandomSelection(int solutionsToSelect, Comparator<S> dominanceComparator) {
         this.dominanceComparator = dominanceComparator ;
         this.solutionsToSelect = solutionsToSelect ;
     }
 
     /** Constructor */
-    public RankingAndAdaptiveSelection(int solutionsToSelect) {
+    public RankingAndRandomSelection(int solutionsToSelect) {
         this(solutionsToSelect, new DominanceComparator<S>()) ;
     }
 
@@ -58,9 +58,29 @@ public class RankingAndAdaptiveSelection<S extends Solution<?>>
         Ranking<S> ranking = new DominanceRanking<S>(dominanceComparator);
         ranking.computeRanking(solutionList) ;
 
-        return crowdingDistanceSelection(ranking);
+        return randomSelection(ranking);
     }
 
+    protected List<S> randomSelection(Ranking<S> ranking) {
+        CrowdingDistance<S> crowdingDistance = new CrowdingDistance<S>() ;
+        List<S> population = new ArrayList<>(solutionsToSelect) ;
+        int rankingIndex = 0;
+        while (population.size() < solutionsToSelect) {
+//            pick all
+            if (subfrontFillsIntoThePopulation(ranking, rankingIndex, population)) {
+                crowdingDistance.computeDensityEstimator(ranking.getSubfront(rankingIndex));
+                addRankedSolutionsToPopulation(ranking, rankingIndex, population);
+                rankingIndex++;
+//            use random
+            } else {
+                crowdingDistance.computeDensityEstimator(ranking.getSubfront(rankingIndex));
+                addLastRankedSolutionsToPopulation(ranking, rankingIndex, population);
+            }
+        }
+
+        return population ;
+    }
+/*
     protected List<S> crowdingDistanceSelection(Ranking<S> ranking) {
         CrowdingDistance<S> crowdingDistance = new CrowdingDistance<S>() ;
         List<S> population = new ArrayList<>(solutionsToSelect) ;
@@ -78,7 +98,9 @@ public class RankingAndAdaptiveSelection<S extends Solution<?>>
 
         return population ;
     }
+*/
 
+//  if that front is less than the remaining
     protected boolean subfrontFillsIntoThePopulation(Ranking<S> ranking, int rank, List<S> population) {
         return ranking.getSubfront(rank).size() < (solutionsToSelect - population.size()) ;
     }
@@ -96,7 +118,7 @@ public class RankingAndAdaptiveSelection<S extends Solution<?>>
     protected void addLastRankedSolutionsToPopulation(Ranking<S> ranking, int rank, List<S>population) {
         List<S> currentRankedFront = ranking.getSubfront(rank) ;
 
-        Collections.sort(currentRankedFront, new CrowdingDistanceComparator<S>()) ;
+        Collections.shuffle(currentRankedFront);
 
         int i = 0 ;
         while (population.size() < solutionsToSelect) {
