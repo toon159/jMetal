@@ -8,6 +8,7 @@ import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
 import org.uma.jmetal.operator.impl.selection.RankingAndRandomSelection;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
@@ -179,13 +180,13 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //      increment ranking index
             rankingIndex++;
         }
-
+/*
         if (ranking.getSubfront(0).size() > getMaxPopulationSize()) {
             numDiff = ranking.getSubfront(0).size() - getMaxPopulationSize();
         } else {
             numDiff = getMaxPopulationSize() - pop.size();
         }
-
+        JMetalLogger.logger.info("" + pop.size());
             if (numDiff <= acceptablePercents){
                 selectMethod = -1;
             } else if (pop.size() == 0) {
@@ -195,6 +196,24 @@ public class hNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //        if first front < max population needed, use NSGA-III instead
                 selectMethod = 3;
             }
+            */
+
+        if (ranking.getSubfront(0).size() > getMaxPopulationSize()) {
+            numDiff = ranking.getSubfront(0).size() - getMaxPopulationSize();
+            if (numDiff <= acceptablePercents){
+             selectMethod = -1;
+            } else {
+                selectMethod = 2;
+            }
+        } else {
+//            numDiff = getMaxPopulationSize() - pop.size();
+            numDiff = getMaxPopulationSize() - ranking.getSubfront(0).size();
+            if (numDiff <= acceptablePercents){
+                selectMethod = -1;
+            } else {
+                selectMethod = 3;
+            }
+        }
 
 
         if (selectMethod == 2) {

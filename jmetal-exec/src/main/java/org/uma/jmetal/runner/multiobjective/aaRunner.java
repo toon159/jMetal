@@ -72,7 +72,7 @@ public class aaRunner extends AbstractAlgorithmRunner {
             hv[2]/=n;
             hv[3]/=n;
             list.add(hv);
-            JMetalLogger.logger.info(""+ (i+1) +" / " + problemWithParetoFrontRef.length + " (" + (i+1)  / problemWithParetoFrontRef.length + "%)");
+            JMetalLogger.logger.info(""+ (i+1) +" / " + problemWithParetoFrontRef.length + " (" + Math.round((i+1.0)  / problemWithParetoFrontRef.length * 100) + "%)");
         }
 
 
