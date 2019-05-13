@@ -43,7 +43,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
     protected boolean isNSGAII;
 
-    final protected double startingTemp = 100;
+    final protected double startingTemp = 1;
     protected double minTemp = 0.0;
     protected double temp = startingTemp;
     final protected int startingTempCounter = 100;
@@ -110,7 +110,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
     @Override
     protected boolean isStoppingConditionReached() {
-        return temp <= minTemp;
+        return iterations >= maxIterations;
     }
 
     @Override
@@ -194,7 +194,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         }
 
         newHv = result;
-        deltaE = hv - newHv;
+        deltaE = newHv - hv;
 
 
         if (shouldChange(temp, deltaE)) {
@@ -219,16 +219,16 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //        System.out.print(change?'2':'3');
 //        JMetalLogger.logger.info("" + pop.size());
 
-        if (!shouldAccept(temp, deltaE)){
-            pop = population;
-        }
+//        if (!shouldAccept(temp, deltaE)){
+//            pop = population;
+//        }
 
-//        change temp every x generations.
-        if(tempCounter > 0) {
-            tempCounter--;
+//        change temp if deltaE is better.
+        if(deltaE > 0) {
+            temp *= 0.99;
         } else {
-            temp -= coolingRate;
-            tempCounter = 30;
+//            temp -= coolingRate;
+//            tempCounter = 30;
         }
         hv = newHv;
         return pop;
@@ -271,17 +271,17 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     }
 
     private double probabilityOfAcceptance(double temp, double deltaE) {
-        return Math.exp(deltaE / temp);
+        return temp + deltaE;
     }
-    private boolean shouldAccept(double temp, double deltaE) {
-        return true;
-    }
+//    private boolean shouldAccept(double temp, double deltaE) {
+//        return true;
+//    }
 
     private boolean shouldChange(double temp, double deltaE) {
-        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
+//        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
         double probOfAccept = probabilityOfAcceptance(temp, deltaE);
 //        probOfAccept < randomValue //at high temp can accept many cases
-        return (deltaE < 0) || probOfAccept < randomValue ;
+        return (deltaE < 0) && probOfAccept < 0 ;
     }
 
     private double getHypervolume(List<S> population) {

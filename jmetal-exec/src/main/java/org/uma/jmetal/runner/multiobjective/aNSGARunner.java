@@ -46,6 +46,8 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
         String problemName = args[0];
         referenceParetoFront = args[1];
         problem = ProblemUtils.loadProblem(problemName);
+        problem.setNumberOfObjectives(Integer.parseInt(args[3]));
+        int maxIterations = Integer.parseInt(args[2]);
 
 //        operators and algorithm are configured
         double crossoverProbability = 0.9;
@@ -66,7 +68,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
                 .setCrossoverOperator(crossover)
                 .setMutationOperator(mutation)
                 .setSelectionOperator(selection)
-                .setMaxIterations(300)
+                .setMaxIterations(maxIterations)
                 .setPopulationSize(100)
                 .setReferenceParetoFront(referenceParetoFront)
                 .build();

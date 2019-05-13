@@ -106,5 +106,18 @@
             <version>2.20.0</version>
             <scope>compile</scope>
         </dependency>
+
+<!--        google maps api -->
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>0.9.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
     </dependencies>
 </project>
