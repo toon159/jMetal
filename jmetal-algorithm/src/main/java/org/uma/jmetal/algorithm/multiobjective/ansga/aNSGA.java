@@ -1,5 +1,6 @@
 package org.uma.jmetal.algorithm.multiobjective.ansga;
 
+import com.opencsv.CSVWriter;
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
@@ -20,7 +21,7 @@ import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 import org.uma.jmetal.util.solutionattribute.Ranking;
 import org.uma.jmetal.util.solutionattribute.impl.DominanceRanking;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -51,7 +52,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected double coolingRate = 10;
     protected double numIterAnnealing = 100;
     protected double result;
-    protected double hv = 1;
+    protected double hv = 0;
     protected double newHv = 1;
     protected double deltaE;
     protected double currentE;
@@ -60,6 +61,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected String referenceParetoFront;
     private double deltaQ = 1;
     boolean change = false;
+    List<String[]> data = new ArrayList<>();
 
     private RandomGenerator<Double> randomGenerator ;
     /**
@@ -110,6 +112,27 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
     @Override
     protected boolean isStoppingConditionReached() {
+        if (iterations >= maxIterations) {
+            // first create file object for file placed at location
+            // specified by filepath
+            File file = new File("hv.csv");
+
+            try {
+                // create FileWriter object with file as parameter
+                FileWriter outputfile = new FileWriter(file);
+
+                // create CSVWriter object filewriter object as parameter
+                CSVWriter writer = new CSVWriter(outputfile, ',', CSVWriter.NO_QUOTE_CHARACTER);
+                writer.writeNext(new String[]{"newHv", "deltaE", "temp", "temp+deltaE", "change"});
+                writer.writeAll(data);
+
+                // closing writer connection
+                writer.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return iterations >= maxIterations;
     }
 
@@ -194,12 +217,21 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         }
 
         newHv = result;
-        deltaE = newHv - hv;
 
-
-        if (shouldChange(temp, deltaE)) {
-            change = !change;
+        if(iterations == 0){
+            deltaE = 0;
+            change = false;
+        } else {
+            deltaE = newHv - hv;
+            if (shouldChange(temp, deltaE)) {
+                change = !change;
+            }
         }
+
+//        System.out.println(newHv + "," + deltaE + "," + temp + "," + (temp+deltaE) + "," + (change?1:0));
+        String[] row = new String[]{""+newHv,""+deltaE,""+temp,""+(temp+deltaE),(change?"1":"0")};
+        data.add(row);
+
         if (change) {
 //      2
             isNSGAII = true;
@@ -224,7 +256,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //        }
 
 //        change temp if deltaE is better.
-        if(deltaE > 0) {
+        if(change == false) {
             temp *= 0.99;
         } else {
 //            temp -= coolingRate;
@@ -278,10 +310,19 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //    }
 
     private boolean shouldChange(double temp, double deltaE) {
-//        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
-        double probOfAccept = probabilityOfAcceptance(temp, deltaE);
+        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
+        double probOfAccept = probabilityOfAcceptance(temp, deltaE);  // start from high to low (1 -> 0)
 //        probOfAccept < randomValue //at high temp can accept many cases
-        return (deltaE < 0) && probOfAccept < 0 ;
+
+        if (deltaE >= 0) {  // if new hv is better
+            return false;  // don't change
+        } else {
+            if (probOfAccept > 1) {  // if new hv is lower but acceptable
+                return false;  // don't change
+            } else {  // if new hv is unacceptable
+                return true;  // do change
+            }
+        }
     }
 
     private double getHypervolume(List<S> population) {

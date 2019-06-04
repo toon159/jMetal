@@ -39,7 +39,7 @@ public class NSGAIII<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, 
     crossoverOperator =  builder.getCrossoverOperator() ;
     mutationOperator  =  builder.getMutationOperator() ;
     selectionOperator =  builder.getSelectionOperator() ;
-
+    maxPopulationSize = builder.getPopulationSize();
     evaluator = builder.getEvaluator() ;
 
     /// NSGAIII

@@ -8,7 +8,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
-
+/*
 public class GoogleDistanceMatrix {
     private static final String API_KEY = "AIzaSyBTAVA1lXA1SGu0rmqEkVBi6q_1bNGjDlY";
     private static GeoApiContext context;
@@ -50,3 +50,4 @@ public class GoogleDistanceMatrix {
     }
 
 }
+*/
