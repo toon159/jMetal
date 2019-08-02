@@ -7,7 +7,6 @@ import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
@@ -62,6 +61,9 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     private double deltaQ = 1;
     boolean change = false;
     List<String[]> data = new ArrayList<>();
+    protected int hvDropCount = 0;
+    protected int maxDrop = 5;
+    protected int hvDropPercent = -10;
 
     private RandomGenerator<Double> randomGenerator ;
     /**
@@ -228,6 +230,8 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             }
         }
 
+
+
 //        System.out.println(newHv + "," + deltaE + "," + temp + "," + (temp+deltaE) + "," + (change?1:0));
         String[] row = new String[]{""+newHv,""+deltaE,""+temp,""+(temp+deltaE),(change?"1":"0")};
         data.add(row);
@@ -310,19 +314,33 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //    }
 
     private boolean shouldChange(double temp, double deltaE) {
-        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
-        double probOfAccept = probabilityOfAcceptance(temp, deltaE);  // start from high to low (1 -> 0)
-//        probOfAccept < randomValue //at high temp can accept many cases
+//        double randomValue = JMetalRandom.getInstance().nextDouble(0, 1);
+//        double probOfAccept = probabilityOfAcceptance(temp, deltaE);  // start from high to low (1 -> 0)
+////        probOfAccept < randomValue //at high temp can accept many cases
+//
+//        if (deltaE >= 0) {  // if new hv is better
+//            return false;  // don't change
+//        } else {
+//            if (probOfAccept > 1) {  // if new hv is lower but acceptable
+//                return false;  // don't change
+//            } else {  // if new hv is unacceptable
+//                return true;  // do change
+//            }
+//        }
 
-        if (deltaE >= 0) {  // if new hv is better
-            return false;  // don't change
-        } else {
-            if (probOfAccept > 1) {  // if new hv is lower but acceptable
-                return false;  // don't change
-            } else {  // if new hv is unacceptable
-                return true;  // do change
-            }
+//        if solution is worse, drop count + 1
+        if (deltaE < 0) {
+            hvDropCount++;
         }
+
+//        if drop so much then change and
+        if ((deltaE/hv)*100 < hvDropPercent) {
+            return true;
+        } else if (hvDropCount >= maxDrop) {
+            hvDropCount = 0;
+            return true;
+        }
+        return false;
     }
 
     private double getHypervolume(List<S> population) {

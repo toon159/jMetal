@@ -45,6 +45,8 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
 
 //        String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
 //        referenceParetoFront = "/pareto_fronts/ZDT1.pf";
+
+//        0-problem name 1-pf 2-maxiter 3-num obj 4-isinvert 5-acceptablePercents
         String problemName = args[0];
         referenceParetoFront = args[1];
         problem = ProblemUtils.loadProblem(problemName);
