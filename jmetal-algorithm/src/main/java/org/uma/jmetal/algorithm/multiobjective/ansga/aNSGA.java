@@ -80,6 +80,8 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         referenceParetoFront = builder.getReferenceParetoFront();
         evaluator = builder.getEvaluator();
         dominanceComparator = new DominanceComparator<>();
+        maxDrop = builder.getMaxDrop();
+        hvDropPercent = builder.getHvDropPercent();
 
 
         /// NSGAIII

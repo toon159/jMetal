@@ -384,7 +384,7 @@ public class aaRunner extends AbstractAlgorithmRunner {
     };
 
     public static void main(String[] args) throws FileNotFoundException {
-        int n = 30;
+        int n = 10;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[] {2, 3, 2.5, 2.55});
         for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
