@@ -49,6 +49,9 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
         problem.setNumberOfObjectives(Integer.parseInt(args[3]));
         int maxIterations = Integer.parseInt(args[2]);
 
+        int maxDrop = Integer.parseInt(args[4]);
+        int hvDropPercent = -1 * Integer.parseInt(args[5]);
+
 //        operators and algorithm are configured
         double crossoverProbability = 0.9;
         double crossoverDistributionIndex = 20.0;
@@ -71,6 +74,8 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
                 .setMaxIterations(maxIterations)
                 .setPopulationSize(100)
                 .setReferenceParetoFront(referenceParetoFront)
+                .setMaxDrop(maxDrop)
+                .setHvDropPercent(hvDropPercent)
                 .build();
 
 

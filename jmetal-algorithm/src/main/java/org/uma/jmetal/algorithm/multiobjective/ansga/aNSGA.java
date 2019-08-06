@@ -63,7 +63,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     List<String[]> data = new ArrayList<>();
     protected int hvDropCount = 0;
     protected int maxDrop = 5;
-    protected int hvDropPercent = -10;
+    protected int hvDropPercent = -5;
 
     private RandomGenerator<Double> randomGenerator ;
     /**
@@ -220,6 +220,13 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
         newHv = result;
 
+        //        if solution is worse, drop count + 1
+        if (deltaE < 0) {
+            hvDropCount++;
+        } else {
+            hvDropCount = 0;
+        }
+
         if(iterations == 0){
             deltaE = 0;
             change = false;
@@ -261,8 +268,9 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 //        change temp if deltaE is better.
         if(change == false) {
-            temp *= 0.99;
+            temp = 1 - newHv;
         } else {
+            temp = 1 - newHv;
 //            temp -= coolingRate;
 //            tempCounter = 30;
         }
@@ -328,10 +336,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //            }
 //        }
 
-//        if solution is worse, drop count + 1
-        if (deltaE < 0) {
-            hvDropCount++;
-        }
+
 
 //        if drop so much then change and
         if ((deltaE/hv)*100 < hvDropPercent) {

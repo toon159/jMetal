@@ -42,6 +42,28 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<aNS
 
     private String referenceParetoFront = "";
 
+    public int getMaxDrop() {
+        return maxDrop;
+    }
+
+    public aNSGABuilder<S> setMaxDrop(int maxDrop) {
+        this.maxDrop = maxDrop;
+        return this;
+    }
+
+    public int getHvDropPercent() {
+        return hvDropPercent;
+    }
+
+    public aNSGABuilder<S> setHvDropPercent(int hvDropPercent) {
+        this.hvDropPercent = hvDropPercent;
+        return this;
+    }
+
+    int maxDrop;
+    int hvDropPercent;
+
+
 
     public aNSGABuilder<S> setReferenceParetoFront(String referenceParetoFront) {
         this.referenceParetoFront = referenceParetoFront;
