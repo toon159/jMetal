@@ -20,10 +20,13 @@ public class aaRunner extends AbstractAlgorithmRunner {
 
 
 //    4 maxdrop 5 droppercent
-int maxdrop = 10;
-double drop_percent = 1;
-    final private static String[][] problemWithParetoFrontRef = {
+    static int max_drop = 10;
+    static double drop_percent = 1;
 
+    final private static String[][] problemWithParetoFrontRef = {
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.8D.pf", "300", "8", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/real_front/DTLZ1-8-PF.txt", "300", "8", ""+max_drop, ""+drop_percent}
+/*
         //            300
         {"org.uma.jmetal.problem.multiobjective.zdt.ZDT1", "/pareto_fronts/ZDT1.pf", "300", "2", "max_drop", "drop_percent"},
         {"org.uma.jmetal.problem.multiobjective.zdt.ZDT2", "/pareto_fronts/ZDT2.pf", "300", "2", "max_drop", "drop_percent"},
@@ -113,22 +116,26 @@ double drop_percent = 1;
 //            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.8D.pf", "500", "8", "max_drop", "drop_percent"},
 //            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.8D.pf", "500", "8", "max_drop", "drop_percent"},
 //            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.8D.pf", "500", "8", "max_drop", "drop_percent"},
-
+*/
     };
 
     public static void main(String[] args) throws FileNotFoundException {
-        int n = 5;
+        int n = 1;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[] {});
         for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
-            int number_of_algo = 50;
+            int number_of_algo = 2;
             double[] hv = new double[number_of_algo];
-
+/*
             for (int j = 0; j < n; j++) {
 				for (int k = 0; k < number_of_algo; k++){
 				    problemWithParetoFrontRef[i][5] = "" + (0.1 * k);
                     hv[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
-				}
+				}*/
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < number_of_algo; k++) {
+                    hv[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
+                }
 //                hv[0] += NSGAIIRunner.main(problemWithParetoFrontRef[i]);
 //                hv[1] += NSGAIIIRunner.main(problemWithParetoFrontRef[i]);
 //                hv[2] += hNSGARunner.main(problemWithParetoFrontRef[i]);

@@ -5,6 +5,7 @@ import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.EnvironmentalSelection;
 import org.uma.jmetal.algorithm.multiobjective.ansga.util.ReferencePoint;
 import org.uma.jmetal.operator.impl.selection.RankingAndCrowdingSelection;
+import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.SolutionListUtils;
@@ -50,10 +51,13 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected int tempCounter = startingTempCounter;
     protected double coolingRate = 10;
     protected double numIterAnnealing = 100;
-    protected double result;
+    protected double[] result;
     protected double hv = 0;
     protected double newHv = 1;
+    protected double igd = 1000;
+    protected double newIgd = 1;
     protected double deltaE;
+    protected double deltaI;
     protected double currentE;
     protected double nextE;
     protected JMetalRandom random;
@@ -215,12 +219,13 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 //        if first front > max population then use that front instead
         if (pop.size() == 0) {
-            result = getHypervolume(fronts.get(0));
+            result = getHVandIGD(fronts.get(0));
         } else {
-            result = getHypervolume(pop);
+            result = getHVandIGD(pop);
         }
 
-        newHv = result;
+        newHv = result[0];
+        newIgd = result[1];
 
         //        if solution is worse, drop count + 1
         if (deltaE < 0) {
@@ -234,6 +239,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             change = false;
         } else {
             deltaE = newHv - hv;
+            deltaI = newIgd - igd;
             if (shouldChange(temp, deltaE)) {
                 change = !change;
             }
@@ -242,7 +248,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 
 //        System.out.println(newHv + "," + deltaE + "," + temp + "," + (temp+deltaE) + "," + (change?1:0));
-        String[] row = new String[]{""+newHv,""+deltaE,""+temp,""+(temp+deltaE),(change?"1":"0")};
+        String[] row = new String[]{""+newHv,""+deltaE,""+temp,""+(temp+deltaE),(change?"1":"0"), ""+newIgd, ""+deltaI};
         data.add(row);
 
         if (change) {
@@ -277,6 +283,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //            tempCounter = 30;
         }
         hv = newHv;
+        igd = newIgd;
         return pop;
     }
 
@@ -340,8 +347,10 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
 
 
-//        if drop so much then change and
-        if ((deltaE/hv)*100 < hvDropPercent) {
+//        if drop so much then change
+//        if drop so much but igd is better then don't change
+//        and
+        if ((deltaE/hv)*100 < hvDropPercent && deltaI < 0) {
             return true;
         } else if (hvDropCount >= maxDrop) {
             hvDropCount = 0;
@@ -366,5 +375,25 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         double hv;
         hv = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
         return hv;
+    }
+
+    private double[] getHVandIGD(List<S> population) {
+        Front referenceFront = null;
+        try {
+            referenceFront = new ArrayFront(referenceParetoFront);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront) ;
+        Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront) ;
+        Front normalizedFront = frontNormalizer.normalize(new ArrayFront(population)) ;
+        List<PointSolution> normalizedPopulation = FrontUtils
+                .convertFrontToSolutionList(normalizedFront) ;
+//        JMetalLogger.logger.info("Spread (N)      : " + new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation));
+        double hv, igd;
+        hv = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
+        igd = new InvertedGenerationalDistance<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
+        double[] result = {hv, igd};
+        return result;
     }
 }
