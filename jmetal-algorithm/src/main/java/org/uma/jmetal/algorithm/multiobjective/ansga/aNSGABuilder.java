@@ -51,17 +51,17 @@ public class aNSGABuilder<S extends Solution<?>> implements AlgorithmBuilder<aNS
         return this;
     }
 
-    public int getHvDropPercent() {
+    public double getHvDropPercent() {
         return hvDropPercent;
     }
 
-    public aNSGABuilder<S> setHvDropPercent(int hvDropPercent) {
+    public aNSGABuilder<S> setHvDropPercent(double hvDropPercent) {
         this.hvDropPercent = hvDropPercent;
         return this;
     }
 
     int maxDrop;
-    int hvDropPercent;
+    double hvDropPercent;
 
 
 

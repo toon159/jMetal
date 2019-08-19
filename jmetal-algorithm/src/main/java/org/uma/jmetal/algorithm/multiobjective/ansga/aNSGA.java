@@ -63,7 +63,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     List<String[]> data = new ArrayList<>();
     protected int hvDropCount = 0;
     protected int maxDrop = 5;
-    protected int hvDropPercent = -5;
+    protected double hvDropPercent = -5;
 
     private RandomGenerator<Double> randomGenerator ;
     /**

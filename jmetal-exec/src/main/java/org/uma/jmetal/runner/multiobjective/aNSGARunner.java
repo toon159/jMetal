@@ -50,7 +50,7 @@ public class aNSGARunner extends AbstractAlgorithmRunner {
         int maxIterations = Integer.parseInt(args[2]);
 
         int maxDrop = Integer.parseInt(args[4]);
-        int hvDropPercent = -1 * Integer.parseInt(args[5]);
+        double hvDropPercent = Double.parseDouble(args[5]) * -1;
 
 //        operators and algorithm are configured
         double crossoverProbability = 0.9;
