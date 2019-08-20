@@ -30,7 +30,7 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
      * @throws FileNotFoundException Invoking command:
      *                               java org.uma.jmetal.runner.multiobjective.NSGAIIRunner problemName [referenceFront]
      */
-    public static double main(String[] args) throws JMetalException, FileNotFoundException {
+    public static double[] main(String[] args) throws JMetalException, FileNotFoundException {
 //        declares the type of the problem to solve
         Problem<DoubleSolution> problem;
         Algorithm<List<DoubleSolution>> algorithm;
@@ -101,6 +101,6 @@ public class hNSGARunner extends AbstractAlgorithmRunner {
 //        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
 //        printFinalSolutionSet(population);
 
-        return getHypervolume(population, referenceParetoFront);
+        return getHVandIGD(population, referenceParetoFront);
     }
 }

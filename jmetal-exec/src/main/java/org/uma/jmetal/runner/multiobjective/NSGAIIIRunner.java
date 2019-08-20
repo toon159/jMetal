@@ -32,7 +32,7 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
      *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName
      *                                - org.uma.jmetal.runner.multiobjective.NSGAIIIRunner problemName paretoFrontFile
      */
-    public static double main(String[] args) throws JMetalException, FileNotFoundException {
+    public static double[] main(String[] args) throws JMetalException, FileNotFoundException {
         Problem<DoubleSolution> problem;
         Algorithm<List<DoubleSolution>> algorithm;
         CrossoverOperator<DoubleSolution> crossover;
@@ -87,6 +87,6 @@ public class NSGAIIIRunner extends AbstractAlgorithmRunner {
         if (!referenceParetoFront.equals("")) {
             printQualityIndicators(population, referenceParetoFront);
         }*/
-        return getHypervolume(population, referenceParetoFront);
+        return getHVandIGD(population, referenceParetoFront);
     }
 }

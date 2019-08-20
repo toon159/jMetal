@@ -24,107 +24,60 @@ public class aaRunner extends AbstractAlgorithmRunner {
     static double drop_percent = 1;
 
     final private static String[][] problemWithParetoFrontRef = {
-            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.8D.pf", "300", "8", ""+max_drop, ""+drop_percent},
-            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/real_front/DTLZ1-8-PF.txt", "300", "8", ""+max_drop, ""+drop_percent}
-/*
+
         //            300
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT1", "/pareto_fronts/ZDT1.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT2", "/pareto_fronts/ZDT2.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT3", "/pareto_fronts/ZDT3.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT4", "/pareto_fronts/ZDT4.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG1", "/pareto_fronts/WFG1.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG2", "/pareto_fronts/WFG2.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG3", "/pareto_fronts/WFG3.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG4", "/pareto_fronts/WFG4.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG5", "/pareto_fronts/WFG5.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG6", "/pareto_fronts/WFG6.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG7", "/pareto_fronts/WFG7.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG8", "/pareto_fronts/WFG8.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG9", "/pareto_fronts/WFG9.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.2D.pf", "300", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG1", "/pareto_fronts/WFG1.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG2", "/pareto_fronts/WFG2.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG3", "/pareto_fronts/WFG3.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG4", "/pareto_fronts/WFG4.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG5", "/pareto_fronts/WFG5.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG6", "/pareto_fronts/WFG6.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG7", "/pareto_fronts/WFG7.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG8", "/pareto_fronts/WFG8.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG9", "/pareto_fronts/WFG9.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.3D.pf", "300", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.4D.pf", "300", "4", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.4D.pf", "300", "4", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.4D.pf", "300", "4", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.4D.pf", "300", "4", "max_drop", "drop_percent"},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG1", "/pareto_fronts/WFG1.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG2", "/pareto_fronts/WFG2.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG3", "/pareto_fronts/WFG3.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG4", "/pareto_fronts/WFG4.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG5", "/pareto_fronts/WFG5.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG6", "/pareto_fronts/WFG6.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG7", "/pareto_fronts/WFG7.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG8", "/pareto_fronts/WFG8.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.wfg.WFG9", "/pareto_fronts/WFG9.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.3D.pf", "300", "3", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.4D.pf", "300", "4", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.4D.pf", "300", "4", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.4D.pf", "300", "4", ""+max_drop, ""+drop_percent},
+        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.4D.pf", "300", "4", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/real_front/DTLZ1-5-PF.txt", "300", "5", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/real_front/DTLZ1-5-PF.txt", "300", "5", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/real_front/DTLZ1-5-PF.txt", "300", "5", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/real_front/DTLZ1-5-PF.txt", "300", "5", ""+max_drop, ""+drop_percent},
 
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.6D.pf", "300", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.6D.pf", "300", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.6D.pf", "300", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.6D.pf", "300", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.8D.pf", "300", "8", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.8D.pf", "300", "8", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.8D.pf", "300", "8", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.8D.pf", "300", "8", "max_drop", "drop_percent"},
-
-//            500
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT1", "/pareto_fronts/ZDT1.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT2", "/pareto_fronts/ZDT2.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT3", "/pareto_fronts/ZDT3.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.zdt.ZDT4", "/pareto_fronts/ZDT4.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG1", "/pareto_fronts/WFG1.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG2", "/pareto_fronts/WFG2.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG3", "/pareto_fronts/WFG3.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG4", "/pareto_fronts/WFG4.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG5", "/pareto_fronts/WFG5.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG6", "/pareto_fronts/WFG6.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG7", "/pareto_fronts/WFG7.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG8", "/pareto_fronts/WFG8.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG9", "/pareto_fronts/WFG9.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.2D.pf", "500", "2", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG1", "/pareto_fronts/WFG1.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG2", "/pareto_fronts/WFG2.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG3", "/pareto_fronts/WFG3.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG4", "/pareto_fronts/WFG4.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG5", "/pareto_fronts/WFG5.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG6", "/pareto_fronts/WFG6.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG7", "/pareto_fronts/WFG7.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG8", "/pareto_fronts/WFG8.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.wfg.WFG9", "/pareto_fronts/WFG9.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.3D.pf", "500", "3", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.4D.pf", "500", "4", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.4D.pf", "500", "4", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.4D.pf", "500", "4", "max_drop", "drop_percent"},
-        {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.4D.pf", "500", "4", "max_drop", "drop_percent"},
-
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.6D.pf", "500", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.6D.pf", "500", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.6D.pf", "500", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.6D.pf", "500", "6", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.8D.pf", "500", "8", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.8D.pf", "500", "8", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.8D.pf", "500", "8", "max_drop", "drop_percent"},
-//            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.8D.pf", "500", "8", "max_drop", "drop_percent"},
-*/
+            //            500
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG1", "/pareto_fronts/WFG1.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG2", "/pareto_fronts/WFG2.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG3", "/pareto_fronts/WFG3.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG4", "/pareto_fronts/WFG4.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG5", "/pareto_fronts/WFG5.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG6", "/pareto_fronts/WFG6.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG7", "/pareto_fronts/WFG7.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG8", "/pareto_fronts/WFG8.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.wfg.WFG9", "/pareto_fronts/WFG9.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.3D.pf", "500", "3", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/pareto_fronts/DTLZ1.4D.pf", "500", "4", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/pareto_fronts/DTLZ2.4D.pf", "500", "4", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/pareto_fronts/DTLZ3.4D.pf", "500", "4", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/pareto_fronts/DTLZ4.4D.pf", "500", "4", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1", "/real_front/DTLZ1-5-PF.txt", "500", "5", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2", "/real_front/DTLZ1-5-PF.txt", "500", "5", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3", "/real_front/DTLZ1-5-PF.txt", "500", "5", ""+max_drop, ""+drop_percent},
+            {"org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4", "/real_front/DTLZ1-5-PF.txt", "500", "5", ""+max_drop, ""+drop_percent},
     };
 
     public static void main(String[] args) throws FileNotFoundException {
-        int n = 1;
+        int n = 3;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[] {});
         for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
-            int number_of_algo = 2;
+            int number_of_algo = 6;
             double[] hv = new double[number_of_algo];
 /*
             for (int j = 0; j < n; j++) {
@@ -132,18 +85,21 @@ public class aaRunner extends AbstractAlgorithmRunner {
 				    problemWithParetoFrontRef[i][5] = "" + (0.1 * k);
                     hv[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
 				}*/
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < number_of_algo; k++) {
-                    hv[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
-                }
-//                hv[0] += NSGAIIRunner.main(problemWithParetoFrontRef[i]);
-//                hv[1] += NSGAIIIRunner.main(problemWithParetoFrontRef[i]);
-//                hv[2] += hNSGARunner.main(problemWithParetoFrontRef[i]);
+                double[] nsga2, nsga3, ansga;
+                nsga2 = NSGAIIRunner.main(problemWithParetoFrontRef[i]);
+                nsga3 = NSGAIIIRunner.main(problemWithParetoFrontRef[i]);
+                ansga = aNSGARunner.main(problemWithParetoFrontRef[i]);
+                hv[0] += nsga2[0];
+                hv[1] += nsga3[0];
+                hv[2] += ansga[0];
+                hv[3] += nsga2[1];
+                hv[4] += nsga3[1];
+                hv[5] += ansga[1];
 //
 //                problemWithParetoFrontRef[i][5] = "-1";
 //                hv[3] += hNSGARunner.main(problemWithParetoFrontRef[i]);
 //                problemWithParetoFrontRef[i][5] = "5";
-            }
+
             for (int j = 0; j < number_of_algo; j++) {
                 hv[j]/=n;
             }

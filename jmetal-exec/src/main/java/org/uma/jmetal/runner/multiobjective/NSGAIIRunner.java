@@ -30,7 +30,7 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
    * Invoking command:
     java org.uma.jmetal.runner.multiobjective.NSGAIIRunner problemName [referenceFront]
    */
-  public static double main(String[] args) throws JMetalException, FileNotFoundException {
+  public static double[] main(String[] args) throws JMetalException, FileNotFoundException {
     Problem<DoubleSolution> problem;
     Algorithm<List<DoubleSolution>> algorithm;
     CrossoverOperator<DoubleSolution> crossover;
@@ -93,6 +93,6 @@ public class NSGAIIRunner extends AbstractAlgorithmRunner {
       printQualityIndicators(population, referenceParetoFront) ;
     }*/
 
-    return getHypervolume(population, referenceParetoFront);
+    return getHVandIGD(population, referenceParetoFront);
   }
 }
