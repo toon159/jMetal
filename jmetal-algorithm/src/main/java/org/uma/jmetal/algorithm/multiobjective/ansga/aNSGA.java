@@ -64,12 +64,15 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     protected String referenceParetoFront;
     private double deltaQ = 1;
     boolean change = false;
-    List<String[]> data = new ArrayList<>();
+    protected List<String[]> data = new ArrayList<>();
     protected int hvDropCount = 0;
     protected int maxDrop = 5;
     protected double hvDropPercent = -5;
+    protected boolean aboutToChange = false;
+    protected boolean useNSGA3;
 
-    private RandomGenerator<Double> randomGenerator ;
+    private RandomGenerator<Double> randomGenerator;
+
     /**
      * Constructor
      */
@@ -136,8 +139,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 
                 // closing writer connection
                 writer.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -196,22 +198,22 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         jointPopulation.addAll(population);
         jointPopulation.addAll(offspringPopulation);
 
-//    Add as most ranks as possible
+//        Add as most ranks as possible
         Ranking<S> ranking = computeRanking(jointPopulation);
-        //List<Solution> pop = crowdingDistanceSelection(ranking);
+//        List<Solution> pop = crowdingDistanceSelection(ranking);
         List<S> pop = new ArrayList<>();
         List<List<S>> fronts = new ArrayList<>();
         int rankingIndex = 0;
         int candidateSolutions = 0;
-//    while the number of solutions is less than pop
+//        while the number of solutions is less than pop
         while (candidateSolutions < getMaxPopulationSize()) {
-//      add fronts
+//            add fronts
             fronts.add(ranking.getSubfront(rankingIndex));
             candidateSolutions += ranking.getSubfront(rankingIndex).size();
-//      if current rank + solutions <= max pop then add that rank
+//            if current rank + solutions <= max pop then add that rank
             if ((pop.size() + ranking.getSubfront(rankingIndex).size()) <= getMaxPopulationSize())
                 addRankedSolutionsToPopulation(ranking, rankingIndex, pop);
-//      increment ranking index
+//            increment ranking index
             rankingIndex++;
         }
 //        System.out.println("" + JMetalRandom.getInstance().nextDouble(0, 1));
@@ -224,56 +226,83 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             result = getHVandIGD(pop);
         }
 
+//        new HV and IGD
         newHv = result[0];
         newIgd = result[1];
 
-        //        if solution is worse, drop count + 1
+//        if solution is worse, drop count + 1
         if (deltaE < 0) {
             hvDropCount++;
         } else {
             hvDropCount = 0;
         }
 
-        if(iterations == 0){
+        if (iterations == 0) {
             deltaE = 0;
+
+            aboutToChange = false;
             change = false;
+
         } else {
             deltaE = newHv - hv;
             deltaI = newIgd - igd;
             if (shouldChange(temp, deltaE)) {
-                change = !change;
+                aboutToChange = true;
             }
         }
 
 
-
-//        System.out.println(newHv + "," + deltaE + "," + temp + "," + (temp+deltaE) + "," + (change?1:0));
-        String[] row = new String[]{""+newHv,""+deltaE,""+temp,""+(temp+deltaE),(change?"1":"0"), ""+newIgd, ""+deltaI};
-        data.add(row);
-
-        if (change) {
-//      2
-            isNSGAII = true;
+        if (aboutToChange) {
+            double[] pop2_result, pop3_result;
+            List<S> pop2 = new ArrayList<>();
+            List<S> pop3 = new ArrayList<>();
+            // pop 2
             RankingAndCrowdingSelection<S> rankingAndCrowdingSelection;
             rankingAndCrowdingSelection = new RankingAndCrowdingSelection<>(getMaxPopulationSize(), dominanceComparator);
-            pop = rankingAndCrowdingSelection.execute(jointPopulation);
-        } else {
-//      3
-            isNSGAII = false;
-//      System.out.println(3);
-            // A copy of the reference list should be used as parameter of the environmental selection
+            pop2 = rankingAndCrowdingSelection.execute(jointPopulation);
+
             EnvironmentalSelection<S> selection =
                     new EnvironmentalSelection<>(fronts, getMaxPopulationSize(), getReferencePointsCopy(),
                             getProblem().getNumberOfObjectives());
-            pop = selection.execute(pop);
+            pop3 = selection.execute(pop);
+
+//            check HV and IGD for pop2, 3
+            if (pop2.size() == 0) {
+                pop2_result = getHVandIGD(fronts.get(0));
+            } else {
+                pop2_result = getHVandIGD(pop);
+            }
+
+            if (pop3.size() == 0) {
+                pop3_result = getHVandIGD(fronts.get(0));
+            } else {
+                pop3_result = getHVandIGD(pop);
+            }
+
+            if (useNSGA3) {
+                //      3
+                pop = pop3;
+            } else {
+                //      2
+                pop = pop2;
+            }
+
+            //        System.out.println(newHv + "," + deltaE + "," + temp + "," + (temp+deltaE) + "," + (change?1:0));
+            String[] row = new String[]{"" + newHv, "" + deltaE, "" + temp, "" + (temp + deltaE), (change ? "1" : "0"), "" + newIgd, "" + deltaI};
+            data.add(row);
+            aboutToChange = false;
+            if (change) {
+                hvDropCount = 0;
+            }
         }
+
 //        System.out.print(change?'2':'3');
 //        JMetalLogger.logger.info("" + pop.size());
 
 //        if (!shouldAccept(temp, deltaE)){
 //            pop = population;
 //        }
-
+/*
 //        change temp if deltaE is better.
         if(change == false) {
             temp = 1 - newHv;
@@ -281,7 +310,7 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
             temp = 1 - newHv;
 //            temp -= coolingRate;
 //            tempCounter = 30;
-        }
+        }*/
         hv = newHv;
         igd = newIgd;
         return pop;
@@ -346,14 +375,13 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
 //        }
 
 
-
 //        if drop so much then change
 //        if drop so much but igd is better then don't change
 //        and
-        if ((deltaE/hv)*100 < hvDropPercent && deltaI < 0) {
+        if ((deltaE / hv) * 100 < hvDropPercent && deltaI < 0) {
             return true;
         } else if (hvDropCount >= maxDrop) {
-            hvDropCount = 0;
+
             return true;
         }
         return false;
@@ -366,11 +394,11 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront) ;
-        Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront) ;
-        Front normalizedFront = frontNormalizer.normalize(new ArrayFront(population)) ;
+        FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront);
+        Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront);
+        Front normalizedFront = frontNormalizer.normalize(new ArrayFront(population));
         List<PointSolution> normalizedPopulation = FrontUtils
-                .convertFrontToSolutionList(normalizedFront) ;
+                .convertFrontToSolutionList(normalizedFront);
 //        JMetalLogger.logger.info("Spread (N)      : " + new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation));
         double hv;
         hv = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
@@ -384,11 +412,11 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront) ;
-        Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront) ;
-        Front normalizedFront = frontNormalizer.normalize(new ArrayFront(population)) ;
+        FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront);
+        Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront);
+        Front normalizedFront = frontNormalizer.normalize(new ArrayFront(population));
         List<PointSolution> normalizedPopulation = FrontUtils
-                .convertFrontToSolutionList(normalizedFront) ;
+                .convertFrontToSolutionList(normalizedFront);
 //        JMetalLogger.logger.info("Spread (N)      : " + new Spread<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation));
         double hv, igd;
         hv = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluate(normalizedPopulation);
