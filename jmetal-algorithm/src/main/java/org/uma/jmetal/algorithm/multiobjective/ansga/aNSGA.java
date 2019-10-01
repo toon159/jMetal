@@ -76,7 +76,6 @@ public class aNSGA<S extends Solution<?>> extends AbstractGeneticAlgorithm<S, Li
     public aNSGA(aNSGABuilder<S> builder) { // can be created from the NSGAIIIBuilder within the same package
         super(builder.getProblem());
         maxIterations = builder.getMaxIterations();
-
         crossoverOperator = builder.getCrossoverOperator();
         mutationOperator = builder.getMutationOperator();
         selectionOperator = builder.getSelectionOperator();
