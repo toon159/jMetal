@@ -11,7 +11,8 @@ import org.uma.jmetal.util.AbstractAlgorithmRunner;
 import org.uma.jmetal.util.JMetalLogger;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.*;
 
 
 public class aaRunner extends AbstractAlgorithmRunner {
@@ -73,7 +74,7 @@ public class aaRunner extends AbstractAlgorithmRunner {
         int iter;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[]{});
-        int number_of_algo = 6;
+        int number_of_algo = 18;
 
         for (int max_gen = 0; max_gen < max_generation.length; max_gen++) {
             for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
@@ -87,7 +88,17 @@ public class aaRunner extends AbstractAlgorithmRunner {
                         problemWithParetoFrontRef[i][5] = "" + (0.1 * k);
                         hv[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
                     }*/
-                double[] nsga2, nsga3, ansga;
+                double[] nsga2, nsga3, ansga, nsga2hv, nsga3hv, ansgahv, nsga2igd, nsga3igd, ansgaigd;
+                nsga2hv = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+                nsga3hv = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+                ansgahv = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+                nsga2igd = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+                nsga3igd = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+                ansgaigd = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+//                for (int j = 6; j < 18; j++) {
+//                    hv[j] = 0;
+//                }
+
                 for (int j = 0; j < n; j++) {
 
                     nsga2 = NSGAIIRunner.main(problemWithParetoFrontRef[i]);
@@ -99,10 +110,65 @@ public class aaRunner extends AbstractAlgorithmRunner {
                     hv[3] += nsga2[1];
                     hv[4] += nsga3[1];
                     hv[5] += ansga[1];
+
+//                    check min
+                    if(nsga2[0] < nsga2hv[0]) {
+                        nsga2hv[0] = nsga2[0];
+                    }
+                    if(nsga3[0] < nsga3hv[0]) {
+                        nsga3hv[0] = nsga3[0];
+                    }
+                    if(ansga[0] < ansgahv[0]) {
+                        ansgahv[0] = ansga[0];
+                    }
+                    if(nsga2[1] < nsga2igd[0]) {
+                        nsga2igd[0] = nsga2[1];
+                    }
+                    if(nsga3[1] < nsga3igd[0]) {
+                        nsga3igd[0] = nsga3[1];
+                    }
+                    if(ansga[1] < ansgaigd[0]) {
+                        ansgaigd[0] = ansga[1];
+                    }
+
+//                    check max
+                    if(nsga2[0] > nsga2hv[1]) {
+                        nsga2hv[1] = nsga2[0];
+                    }
+                    if(nsga3[0] > nsga3hv[1]) {
+                        nsga3hv[1] = nsga3[0];
+                    }
+                    if(ansga[0] > ansgahv[1]) {
+                        ansgahv[1] = ansga[0];
+                    }
+                    if(nsga2[1] > nsga2igd[1]) {
+                        nsga2igd[1] = nsga2[1];
+                    }
+                    if(nsga3[1] > nsga3igd[1]) {
+                        nsga3igd[1] = nsga3[1];
+                    }
+                    if(ansga[1] > ansgaigd[1]) {
+                        ansgaigd[1] = ansga[1];
+                    }
+
                 }
-                for (int j = 0; j < number_of_algo; j++) {
+                for (int j = 0; j < 6; j++) {
                     hv[j] /= n;
                 }
+                hv[6] = nsga2hv[0];
+                hv[7] = nsga3hv[0];
+                hv[8] = ansgahv[0];
+                hv[9] = nsga2igd[0];
+                hv[10] = nsga3igd[0];
+                hv[11] = ansgaigd[0];
+
+                hv[12] = nsga2hv[1];
+                hv[13] = nsga3hv[1];
+                hv[14] = ansgahv[1];
+                hv[15] = nsga2igd[1];
+                hv[16] = nsga3igd[1];
+                hv[17] = ansgaigd[1];
+
                 list.add(hv);
                 JMetalLogger.logger.info("max_Gen: " + max_generation[max_gen] + " => " + (iter + 1) + " / " + problemWithParetoFrontRef.length + " (" + Math.round((iter + 1.0) / problemWithParetoFrontRef.length * 100) + "%)");
                 for (Double d : hv) {
