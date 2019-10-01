@@ -13,6 +13,7 @@ import org.uma.jmetal.util.JMetalLogger;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.*;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 
 public class aaRunner extends AbstractAlgorithmRunner {
@@ -74,19 +75,19 @@ public class aaRunner extends AbstractAlgorithmRunner {
         int iter;
         ArrayList<double[]> list = new ArrayList();
         list.add(new double[]{});
-        int number_of_algo = 18;
+        int number_of_algo = 24;
 
         for (int max_gen = 0; max_gen < max_generation.length; max_gen++) {
             for (int i = 0; i < problemWithParetoFrontRef.length; i++) {
                 iter = i;
                 problemWithParetoFrontRef[i][2] = ""+max_generation[max_gen];
-                double[] hv = new double[number_of_algo];
+                double[] results = new double[number_of_algo];
 
     /*
                 for (int j = 0; j < n; j++) {
                     for (int k = 0; k < number_of_algo; k++){
                         problemWithParetoFrontRef[i][5] = "" + (0.1 * k);
-                        hv[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
+                        results[k] += aNSGARunner.main(problemWithParetoFrontRef[i]);
                     }*/
                 double[] nsga2, nsga3, ansga, nsga2hv, nsga3hv, ansgahv, nsga2igd, nsga3igd, ansgaigd;
                 nsga2hv = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
@@ -96,20 +97,34 @@ public class aaRunner extends AbstractAlgorithmRunner {
                 nsga3igd = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
                 ansgaigd = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
 //                for (int j = 6; j < 18; j++) {
-//                    hv[j] = 0;
+//                    results[j] = 0;
 //                }
+
+                double[] hv_nsga2_list = new double[n];
+                double[] hv_nsga3_list = new double[n];
+                double[] hv_ansga_list = new double[n];
+                double[] igd_nsga2_list = new double[n];
+                double[] igd_nsga3_list = new double[n];
+                double[] igd_ansga_list = new double[n];
 
                 for (int j = 0; j < n; j++) {
 
                     nsga2 = NSGAIIRunner.main(problemWithParetoFrontRef[i]);
                     nsga3 = NSGAIIIRunner.main(problemWithParetoFrontRef[i]);
                     ansga = aNSGARunner.main(problemWithParetoFrontRef[i]);
-                    hv[0] += nsga2[0];
-                    hv[1] += nsga3[0];
-                    hv[2] += ansga[0];
-                    hv[3] += nsga2[1];
-                    hv[4] += nsga3[1];
-                    hv[5] += ansga[1];
+                    results[0] += nsga2[0];
+                    results[1] += nsga3[0];
+                    results[2] += ansga[0];
+                    results[3] += nsga2[1];
+                    results[4] += nsga3[1];
+                    results[5] += ansga[1];
+
+                    hv_nsga2_list[j] = nsga2[0];
+                    hv_nsga3_list[j] = nsga3[0];
+                    hv_ansga_list[j] = ansga[0];
+                    igd_nsga2_list[j] = nsga2[1];
+                    igd_nsga3_list[j] = nsga3[1];
+                    igd_ansga_list[j] = ansga[1];
 
 //                    check min
                     if(nsga2[0] < nsga2hv[0]) {
@@ -153,25 +168,38 @@ public class aaRunner extends AbstractAlgorithmRunner {
 
                 }
                 for (int j = 0; j < 6; j++) {
-                    hv[j] /= n;
+                    results[j] /= n;
                 }
-                hv[6] = nsga2hv[0];
-                hv[7] = nsga3hv[0];
-                hv[8] = ansgahv[0];
-                hv[9] = nsga2igd[0];
-                hv[10] = nsga3igd[0];
-                hv[11] = ansgaigd[0];
+                results[6] = nsga2hv[0];
+                results[7] = nsga3hv[0];
+                results[8] = ansgahv[0];
+                results[9] = nsga2igd[0];
+                results[10] = nsga3igd[0];
+                results[11] = ansgaigd[0];
 
-                hv[12] = nsga2hv[1];
-                hv[13] = nsga3hv[1];
-                hv[14] = ansgahv[1];
-                hv[15] = nsga2igd[1];
-                hv[16] = nsga3igd[1];
-                hv[17] = ansgaigd[1];
+                results[12] = nsga2hv[1];
+                results[13] = nsga3hv[1];
+                results[14] = ansgahv[1];
+                results[15] = nsga2igd[1];
+                results[16] = nsga3igd[1];
+                results[17] = ansgaigd[1];
 
-                list.add(hv);
+                DescriptiveStatistics da = new DescriptiveStatistics(hv_nsga2_list);
+                results[18] = da.getPercentile(75) - da.getPercentile(25);
+                da = new DescriptiveStatistics(hv_nsga3_list);
+                results[19] = da.getPercentile(75) - da.getPercentile(25);
+                da = new DescriptiveStatistics(hv_ansga_list);
+                results[20] = da.getPercentile(75) - da.getPercentile(25);
+                da = new DescriptiveStatistics(igd_nsga2_list);
+                results[21] = da.getPercentile(75) - da.getPercentile(25);
+                da = new DescriptiveStatistics(igd_nsga3_list);
+                results[22] = da.getPercentile(75) - da.getPercentile(25);
+                da = new DescriptiveStatistics(igd_ansga_list);
+                results[23] = da.getPercentile(75) - da.getPercentile(25);
+
+                list.add(results);
                 JMetalLogger.logger.info("max_Gen: " + max_generation[max_gen] + " => " + (iter + 1) + " / " + problemWithParetoFrontRef.length + " (" + Math.round((iter + 1.0) / problemWithParetoFrontRef.length * 100) + "%)");
-                for (Double d : hv) {
+                for (Double d : results) {
                     System.out.println(d);
                 }
 
