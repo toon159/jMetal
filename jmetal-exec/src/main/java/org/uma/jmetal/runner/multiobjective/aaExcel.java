@@ -14,7 +14,7 @@ import java.util.List;
 
 public class aaExcel {
 
-    private static final String FILE_NAME = "result.xlsx";
+    private static String FILE_NAME = "result.xlsx";
     ArrayList<double[]> data;
 
     public aaExcel(ArrayList<double[]> data) {
@@ -38,14 +38,18 @@ public class aaExcel {
             }
         }
 
-        try {
-            FileOutputStream outputStream = new FileOutputStream(FILE_NAME);
-            workbook.write(outputStream);
-            workbook.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (true) {
+            try {
+                FileOutputStream outputStream = new FileOutputStream(FILE_NAME);
+                workbook.write(outputStream);
+                workbook.close();
+                break;
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Try creating excel again");
+                FILE_NAME += ".xlsx";
+            }
         }
-
         System.out.println("Done");
     }
 
